@@ -1,26 +1,26 @@
-# Nome dell'eseguibile
+# executable name
 TARGET = app
 
-# File sorgente
+# sources
 MAIN = ./main.cpp
 SRCS = ./src/*.cpp
 
-# Headers
+# headers
 INCLUDE = ./include/*.hpp
 
-# Compilatore
+# compiler
 CXX = g++
 
-# Flag di compilazione
+# compilation flags
 CXXFLAGS = -Wall -std=c++17
 
-# Librerie da linkare
+# libraries
 LIBS = -lglfw -lGLEW -lGL 
 
 
 $(TARGET): $(SRCS)
 	$(CXX) $(CXXFLAGS) -o ./bin/$(TARGET) $(MAIN) $(SRCS) -I$(INCLUDE) $(LIBS)
 
-# Pulizia
+# cleaning
 clean:
 	rm -f $(TARGET)
