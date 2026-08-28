@@ -25,6 +25,11 @@ Game::~Game()
 void Game::run()
 {
 
+    Texture t{GL_TEXTURE_2D, "/home/morris/Workspace/scrap_workspace/opengl_test/boilerplate/assets/textures/brick_texture.jpg"};
+    t.load();
+    t.bind(GL_TEXTURE0);
+
+    Cube c{5.f, &t};
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))
@@ -35,7 +40,10 @@ void Game::run()
         float deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // render code here
+        processInput(deltaTime);
+
+        renderer->render(c, *camera, *shader);
+        // renderer->render(s, *camera, *shader);
 
         renderer->clear(window);
     }
