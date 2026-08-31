@@ -6,6 +6,8 @@ class Texture
 {
 
 public:
+    Texture() = default;
+
     Texture(GLenum textureTarget, const std::string &fileName) : mTextureTarget(textureTarget), mFileName(fileName) {}
 
     bool load();

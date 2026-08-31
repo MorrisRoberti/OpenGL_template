@@ -15,7 +15,7 @@ CXX = g++
 CXXFLAGS = -Wall -std=c++17
 
 # libraries
-LIBS = -lglfw -lGLEW -lGL 
+LIBS = -lglfw -lGLEW -lGL -lassimp
 
 
 $(TARGET): $(SRCS)
