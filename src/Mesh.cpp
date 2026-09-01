@@ -26,6 +26,35 @@ bool Mesh::load(const std::string &fileName)
     return res;
 }
 
+void Mesh::render()
+{
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+
+    for (unsigned int i = 0; i < mEntries.size(); i++)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, mEntries[i].VBO);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)12);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)20);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEntries[i].EBO);
+
+        const unsigned int materialIndex = mEntries[i].materialIndex;
+
+        if (materialIndex < mTextures.size() && mTextures[materialIndex])
+        {
+            mTextures[materialIndex]->bind(GL_TEXTURE0);
+        }
+
+        glDrawElements(GL_TRIANGLES, mEntries[i].numIndices, GL_UNSIGNED_INT, 0);
+    }
+
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+}
 void Mesh::clear()
 {
     mEntries.clear();
@@ -48,8 +77,39 @@ bool Mesh::initFromScene(const aiScene *scene, const std::string &fileName)
 
 bool Mesh::initMaterials(const aiScene *scene, const std::string &fileName)
 {
+    bool res = false;
+    std::string dir = "../assets/textures";
 
-    return false;
+    for (unsigned int i = 0; i < scene->mNumMaterials; ++i)
+    {
+        const aiMaterial *pMaterial = scene->mMaterials[i];
+        mTextures.at(i) = nullptr;
+        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+        {
+            aiString Path;
+
+            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, nullptr, nullptr, nullptr, nullptr, nullptr) == AI_SUCCESS)
+            {
+                std::string FullPath = dir + "/" + Path.data;
+                mTextures[i] = new Texture(GL_TEXTURE_2D, FullPath.c_str());
+
+                if (!mTextures[i]->load())
+                {
+                    std::cerr << "Error loading texture " << FullPath << std::endl;
+                    delete mTextures[i];
+                    mTextures[i] = nullptr;
+                    res = false;
+                }
+            }
+        }
+        // if (!mTextures[i])
+        // {
+        //     mTextures[i] = new Texture(GL_TEXTURE_2D, "../assets/textures/white.png");
+        //     res = mTextures[i]->load();
+        // }
+    }
+
+    return res;
 }
 
 void Mesh::initMesh(int index, const aiMesh *mesh)
@@ -57,7 +117,7 @@ void Mesh::initMesh(int index, const aiMesh *mesh)
     mEntries.at(index).materialIndex = mesh->mMaterialIndex;
 
     std::vector<Vertex> vertices;
-    std::vector<aiFace> indices;
+    std::vector<unsigned int> indices;
 
     const aiVector3D zero3D{0.f, 0.f, 0.f};
 

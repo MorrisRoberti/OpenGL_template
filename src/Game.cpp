@@ -2,6 +2,7 @@
 #include "../assets/2d_shapes/Square.hpp"
 #include "../assets/meshes/Cube.hpp"
 #include "../include/Texture.hpp"
+#include "../include/Mesh.hpp"
 #include <iostream>
 #include <algorithm>
 
@@ -26,8 +27,11 @@ void Game::run()
 {
 
     Texture t{GL_TEXTURE_2D, "/home/morris/Workspace/scrap_workspace/opengl_test/boilerplate/assets/textures/brick_texture.jpg"};
-    t.load();
-    t.bind(GL_TEXTURE0);
+    // t.load();
+    // t.bind(GL_TEXTURE0);
+
+    Mesh mesh{"/home/morris/Workspace/scrap_workspace/opengl_test/boilerplate/assets/meshes/12140_Skull_v3_L2.obj"};
+    mesh.setScale(glm::vec3{0.01f, 0.01f, 0.01f});
 
     Cube c{5.f, &t};
     float lastFrame = 0.0f;
@@ -42,7 +46,8 @@ void Game::run()
 
         processInput(deltaTime);
 
-        renderer->render(c, *camera, *shader);
+        // renderer->render(c, *camera, *shader);
+        renderer->render(mesh, *camera, *shader);
         // renderer->render(s, *camera, *shader);
 
         renderer->clear(window);

@@ -14,6 +14,17 @@ void Renderer::render(Shape &model, Camera &camera, Shader &shader)
     glBindVertexArray(0);
 }
 
+void Renderer::render(Mesh &mesh, Camera &camera, Shader &shader)
+{
+    shader.use();
+    shader.setMat4("view", camera.getViewMatrix());
+    shader.setMat4("projection", camera.getProjectionMatrix());
+    shader.setMat4("model", mesh.getModelMatrix());
+    shader.setUniform1i("gSampler", 0);
+
+    mesh.render();
+}
+
 void Renderer::clear(GLFWwindow *window)
 {
     glfwSwapBuffers(window);
