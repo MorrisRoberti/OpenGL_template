@@ -26,14 +26,10 @@ Game::~Game()
 void Game::run()
 {
 
-    Texture t{GL_TEXTURE_2D, "/home/morris/Workspace/scrap_workspace/opengl_test/boilerplate/assets/textures/brick_texture.jpg"};
-    // t.load();
-    // t.bind(GL_TEXTURE0);
+    Mesh mesh{"./assets/meshes/Skull/12140_Skull_v3_L2.obj"};
+    mesh.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+    mesh.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
 
-    Mesh mesh{"/home/morris/Workspace/scrap_workspace/opengl_test/boilerplate/assets/meshes/12140_Skull_v3_L2.obj"};
-    mesh.setScale(glm::vec3{0.01f, 0.01f, 0.01f});
-
-    Cube c{5.f, &t};
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))
@@ -46,9 +42,7 @@ void Game::run()
 
         processInput(deltaTime);
 
-        // renderer->render(c, *camera, *shader);
         renderer->render(mesh, *camera, *shader);
-        // renderer->render(s, *camera, *shader);
 
         renderer->clear(window);
     }

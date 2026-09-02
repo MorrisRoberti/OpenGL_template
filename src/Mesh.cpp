@@ -16,7 +16,7 @@ bool Mesh::load(const std::string &fileName)
 
     Assimp::Importer importer;
 
-    const aiScene *pScene = importer.ReadFile(fileName.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+    const aiScene *pScene = importer.ReadFile(fileName.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
     if (pScene)
         res = initFromScene(pScene, fileName);
@@ -78,7 +78,18 @@ bool Mesh::initFromScene(const aiScene *scene, const std::string &fileName)
 bool Mesh::initMaterials(const aiScene *scene, const std::string &fileName)
 {
     bool res = false;
-    std::string dir = "../assets/textures";
+    std::string dir;
+
+    // find the object directory
+    std::size_t lastSlash = fileName.find_last_of("/\\");
+    if (lastSlash != std::string::npos)
+    {
+        dir = fileName.substr(0, lastSlash);
+    }
+    else
+    {
+        dir = ".";
+    }
 
     for (unsigned int i = 0; i < scene->mNumMaterials; ++i)
     {
@@ -91,7 +102,7 @@ bool Mesh::initMaterials(const aiScene *scene, const std::string &fileName)
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, nullptr, nullptr, nullptr, nullptr, nullptr) == AI_SUCCESS)
             {
                 std::string FullPath = dir + "/" + Path.data;
-                mTextures[i] = new Texture(GL_TEXTURE_2D, FullPath.c_str());
+                mTextures[i] = new Texture{GL_TEXTURE_2D, FullPath};
 
                 if (!mTextures[i]->load())
                 {
@@ -102,11 +113,11 @@ bool Mesh::initMaterials(const aiScene *scene, const std::string &fileName)
                 }
             }
         }
-        // if (!mTextures[i])
-        // {
-        //     mTextures[i] = new Texture(GL_TEXTURE_2D, "../assets/textures/white.png");
-        //     res = mTextures[i]->load();
-        // }
+        if (!mTextures[i])
+        {
+            mTextures[i] = new Texture{GL_TEXTURE_2D, "./assets/textures/default.png"};
+            res = mTextures[i]->load();
+        }
     }
 
     return res;
