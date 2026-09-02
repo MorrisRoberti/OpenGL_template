@@ -1,8 +1,8 @@
 #include "../include/Game.hpp"
 #include "../assets/2d_shapes/Square.hpp"
-#include "../assets/meshes/Cube.hpp"
+#include "../assets/models/Cube.hpp"
 #include "../include/Texture.hpp"
-#include "../include/Mesh.hpp"
+#include "../include/Model.hpp"
 #include <iostream>
 #include <algorithm>
 
@@ -26,9 +26,9 @@ Game::~Game()
 void Game::run()
 {
 
-    Mesh mesh{"./assets/meshes/Skull/12140_Skull_v3_L2.obj"};
-    mesh.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
-    mesh.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
+    Model model{"./assets/models/Skull/12140_Skull_v3_L2.obj"};
+    model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+    model.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
 
     float lastFrame = 0.0f;
 
@@ -42,7 +42,7 @@ void Game::run()
 
         processInput(deltaTime);
 
-        renderer->render(mesh, *camera, *shader);
+        renderer->render(model, *camera, *shader);
 
         renderer->clear(window);
     }

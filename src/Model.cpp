@@ -1,14 +1,14 @@
-#include "../include/Mesh.hpp"
 #include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+#include "../include/Model.hpp"
 
-Mesh::Mesh(const std::string &fileName)
+Model::Model(const std::string &fileName)
 {
     load(fileName);
 }
 
-bool Mesh::load(const std::string &fileName)
+bool Model::load(const std::string &fileName)
 {
     bool res = false;
 
@@ -21,12 +21,12 @@ bool Mesh::load(const std::string &fileName)
     if (pScene)
         res = initFromScene(pScene, fileName);
     else
-        std::cerr << "Error while parsing the mesh at: " << fileName << std::endl;
+        std::cerr << "Error while parsing the model at: " << fileName << std::endl;
 
     return res;
 }
 
-void Mesh::render()
+void Model::render()
 {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -34,34 +34,34 @@ void Mesh::render()
 
     for (unsigned int i = 0; i < mEntries.size(); i++)
     {
-        glBindBuffer(GL_ARRAY_BUFFER, mEntries[i].VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, mEntries.at(i).VBO);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)12);
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)20);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEntries[i].EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEntries.at(i).EBO);
 
-        const unsigned int materialIndex = mEntries[i].materialIndex;
+        const unsigned int materialIndex = mEntries.at(i).materialIndex;
 
-        if (materialIndex < mTextures.size() && mTextures[materialIndex])
+        if (materialIndex < mTextures.size() && mTextures.at(materialIndex))
         {
-            mTextures[materialIndex]->bind(GL_TEXTURE0);
+            mTextures.at(materialIndex)->bind(GL_TEXTURE0);
         }
 
-        glDrawElements(GL_TRIANGLES, mEntries[i].numIndices, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, mEntries.at(i).numIndices, GL_UNSIGNED_INT, 0);
     }
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
 }
-void Mesh::clear()
+void Model::clear()
 {
     mEntries.clear();
     mTextures.clear();
 }
 
-bool Mesh::initFromScene(const aiScene *scene, const std::string &fileName)
+bool Model::initFromScene(const aiScene *scene, const std::string &fileName)
 {
     mEntries.resize(scene->mNumMeshes);
     mTextures.resize(scene->mNumMaterials);
@@ -75,7 +75,7 @@ bool Mesh::initFromScene(const aiScene *scene, const std::string &fileName)
     return initMaterials(scene, fileName);
 }
 
-bool Mesh::initMaterials(const aiScene *scene, const std::string &fileName)
+bool Model::initMaterials(const aiScene *scene, const std::string &fileName)
 {
     bool res = false;
     std::string dir;
@@ -102,28 +102,28 @@ bool Mesh::initMaterials(const aiScene *scene, const std::string &fileName)
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, nullptr, nullptr, nullptr, nullptr, nullptr) == AI_SUCCESS)
             {
                 std::string FullPath = dir + "/" + Path.data;
-                mTextures[i] = new Texture{GL_TEXTURE_2D, FullPath};
+                mTextures.at(i) = new Texture{GL_TEXTURE_2D, FullPath};
 
-                if (!mTextures[i]->load())
+                if (!mTextures.at(i)->load())
                 {
                     std::cerr << "Error loading texture " << FullPath << std::endl;
-                    delete mTextures[i];
-                    mTextures[i] = nullptr;
+                    delete mTextures.at(i);
+                    mTextures.at(i) = nullptr;
                     res = false;
                 }
             }
         }
-        if (!mTextures[i])
+        if (!mTextures.at(i))
         {
-            mTextures[i] = new Texture{GL_TEXTURE_2D, "./assets/textures/default.png"};
-            res = mTextures[i]->load();
+            mTextures.at(i) = new Texture{GL_TEXTURE_2D, "./assets/textures/default.png"};
+            res = mTextures.at(i)->load();
         }
     }
 
     return res;
 }
 
-void Mesh::initMesh(int index, const aiMesh *mesh)
+void Model::initMesh(int index, const aiMesh *mesh)
 {
     mEntries.at(index).materialIndex = mesh->mMaterialIndex;
 
@@ -156,5 +156,5 @@ void Mesh::initMesh(int index, const aiMesh *mesh)
         indices.push_back(face.mIndices[2]);
     }
 
-    mEntries[index].init(vertices, indices);
+    mEntries.at(index).init(vertices, indices);
 }

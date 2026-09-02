@@ -14,7 +14,7 @@ void Renderer::render(Shape &model, Camera &camera, Shader &shader)
     glBindVertexArray(0);
 }
 
-void Renderer::render(Mesh &mesh, Camera &camera, Shader &shader)
+void Renderer::render(Model &mesh, Camera &camera, Shader &shader)
 {
     shader.use();
     shader.setMat4("view", camera.getViewMatrix());
