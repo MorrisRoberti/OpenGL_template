@@ -113,6 +113,7 @@ bool Model::initMaterials(const aiScene *scene, const std::string &fileName)
                 }
             }
         }
+        // fallback
         if (!mTextures.at(i))
         {
             mTextures.at(i) = new Texture{GL_TEXTURE_2D, "./assets/textures/default.png"};

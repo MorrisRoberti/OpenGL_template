@@ -3,8 +3,9 @@
 #include <vector>
 #include "./Vertex.hpp"
 
-struct Mesh
+class Mesh
 {
+public:
     Mesh() = default;
 
     bool init(const std::vector<Vertex> &vertices,
@@ -17,14 +18,14 @@ struct Mesh
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER,
                      sizeof(Vertex) * vertices.size(),
-                     &vertices[0],
+                     &vertices.at(0),
                      GL_STATIC_DRAW);
 
         glGenBuffers(1, &EBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                      sizeof(unsigned int) * numIndices,
-                     &indices[0],
+                     &indices.at(0),
                      GL_STATIC_DRAW);
         return true;
     }
