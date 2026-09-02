@@ -26,10 +26,13 @@ Game::~Game()
 void Game::run()
 {
 
-    Model model{"./assets/models/Skull/12140_Skull_v3_L2.obj"};
-    model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
-    model.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
+    // Model model{"./assets/models/Skull/12140_Skull_v3_L2.obj"};
+    // model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+    // model.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
+    Texture t{GL_TEXTURE_2D, "./assets/textures/brick_texture.jpg"};
+    t.bind(GL_TEXTURE0);
 
+    Cube c{1.0f, &t};
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))
@@ -42,7 +45,7 @@ void Game::run()
 
         processInput(deltaTime);
 
-        renderer->render(model, *camera, *shader);
+        renderer->render(c, *camera, *shader);
 
         renderer->clear(window);
     }

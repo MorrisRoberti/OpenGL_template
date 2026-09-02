@@ -5,11 +5,14 @@
 #include <assimp/scene.h>
 #include <glm/gtc/type_precision.hpp>
 #include "./Texture.hpp"
-#include "./Shape.hpp"
+#include "./Renderable.hpp"
+#include "./Transformable.hpp"
+#include "./RenderContext.hpp"
+#include "./Shader.hpp"
 #include "./Vertex.hpp"
 #include "./Mesh.hpp"
 
-class Model : public Shape
+class Model : public Transformable, public Renderable
 {
 
 public:
@@ -17,7 +20,7 @@ public:
 
     bool load(const std::string &fileName);
 
-    void render();
+    void render(RenderContext &context) override;
 
 private:
     void clear();

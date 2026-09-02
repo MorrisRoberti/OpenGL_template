@@ -26,34 +26,23 @@ bool Model::load(const std::string &fileName)
     return res;
 }
 
-void Model::render()
+void Model::render(RenderContext &context)
 {
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
 
-    for (unsigned int i = 0; i < mEntries.size(); i++)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, mEntries.at(i).VBO);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)12);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *)20);
+    // glm::mat4 oldModelMatrix = context.modelMatrix;
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEntries.at(i).EBO);
+    // context.modelMatrix = context.modelMatrix * getModelMatrix();
 
-        const unsigned int materialIndex = mEntries.at(i).materialIndex;
+    // for (auto &mesh : mEntries)
+    // {
+    //     mesh.render(context);
+    // }
 
-        if (materialIndex < mTextures.size() && mTextures.at(materialIndex))
-        {
-            mTextures.at(materialIndex)->bind(GL_TEXTURE0);
-        }
+    // glDisableVertexAttribArray(0);
+    // glDisableVertexAttribArray(1);
+    // glDisableVertexAttribArray(2);
 
-        glDrawElements(GL_TRIANGLES, mEntries.at(i).numIndices, GL_UNSIGNED_INT, 0);
-    }
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
+    // context.modelMatrix = oldModelMatrix;
 }
 void Model::clear()
 {
