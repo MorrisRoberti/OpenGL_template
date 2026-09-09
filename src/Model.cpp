@@ -91,23 +91,30 @@ Mesh Model::initMesh(int index, const aiMesh *mesh, const aiScene *scene)
     std::vector<Vertex> vertices;
     vertices.reserve(mesh->mNumVertices);
 
-    std::vector<unsigned int> indices;
+    std::vector<GLuint> indices;
     indices.reserve(mesh->mNumFaces * 3);
 
     std::vector<Texture> textures;
 
     const aiVector3D zero3D{0.f, 0.f, 0.f};
 
-    // loading vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
     {
         const aiVector3D *pos = &(mesh->mVertices[i]);
-        const aiVector3D *normal = mesh->HasNormals() ? &(mesh->mNormals[i]) : &zero3D;
-        const aiVector3D *texCoords = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &zero3D;
 
-        Vertex v{glm::vec3{pos->x, pos->y, pos->z},
-                 glm::vec2{texCoords->x, texCoords->y},
-                 glm::vec3{normal->x, normal->y, normal->z}};
+        std::optional<glm::vec2> texCoords{std::nullopt};
+        if (mesh->HasTextureCoords(0))
+            texCoords = glm::vec2{mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y};
+
+        std::optional<glm::vec3> normal{std::nullopt};
+        if (mesh->HasNormals())
+            normal = glm::vec3{mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z};
+
+        Vertex v{
+            glm::vec3{pos->x, pos->y, pos->z},
+            texCoords,
+            normal,
+            std::nullopt};
 
         vertices.push_back(v);
     }

@@ -31,13 +31,16 @@ public:
 private:
     void genVertices(float size)
     {
+        float halfSize{size / 2.0f};
 
-        vertices = {
-            0.0f, size / 2.0f, 0.0f,        // Top-Left
-            size / 2.0f, size / 2.0f, 0.0f, // Top-Right
-            0.0f, 0.0f, 0.0f,               // Bottom-Left
-            size / 2.0f, 0.0f, 0.0f         // Bottom-Right
-        };
+        vertices.clear();
+        vertices.reserve(4);
+
+        // Creiamo i vertici passando solo la posizione; gli altri campi restano std::nullopt
+        vertices.push_back(Vertex{glm::vec3{0.0f, halfSize, 0.0f}, std::nullopt, std::nullopt, std::nullopt});     // Top-Left
+        vertices.push_back(Vertex{glm::vec3{halfSize, halfSize, 0.0f}, std::nullopt, std::nullopt, std::nullopt}); // Top-Right
+        vertices.push_back(Vertex{glm::vec3{0.0f, 0.0f, 0.0f}, std::nullopt, std::nullopt, std::nullopt});         // Bottom-Left
+        vertices.push_back(Vertex{glm::vec3{halfSize, 0.0f, 0.0f}, std::nullopt, std::nullopt, std::nullopt});     // Bottom-Right
     }
 
     void genIndices()
@@ -49,24 +52,20 @@ private:
 
     void genColors(glm::vec3 color)
     {
-        colors.clear();
-        colors.reserve(12);
-
-        for (int i = 0; i < 4; ++i)
+        for (auto &vertex : vertices)
         {
-            colors.push_back(color.x);
-            colors.push_back(color.y);
-            colors.push_back(color.z);
+            vertex.mColor = color; // Assegna il valore all'std::optional
         }
     }
 
     void genTextureVertices(float size)
     {
-        texCoords = {
-            0.0f, 1.0f, // UV Top-Left
-            1.0f, 1.0f, // UV Top-Right
-            0.0f, 0.0f, // UV Bottom-Left
-            1.0f, 0.0f  // UV Bottom-Right
-        };
+        if (vertices.size() >= 4)
+        {
+            vertices[0].mTexCoords = glm::vec2{0.0f, 1.0f}; // UV Top-Left
+            vertices[1].mTexCoords = glm::vec2{1.0f, 1.0f}; // UV Top-Right
+            vertices[2].mTexCoords = glm::vec2{0.0f, 0.0f}; // UV Bottom-Left
+            vertices[3].mTexCoords = glm::vec2{1.0f, 0.0f}; // UV Bottom-Right
+        }
     }
 };

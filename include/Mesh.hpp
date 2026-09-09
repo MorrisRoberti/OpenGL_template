@@ -12,7 +12,7 @@ public:
     Mesh() = default;
 
     Mesh(const std::vector<Vertex> &vertices,
-         const std::vector<unsigned int> &indices,
+         const std::vector<GLuint> &indices,
          const std::vector<Texture> &textures) : mVertices(vertices),
                                                  mIndices(indices), mTextures(textures)
     {
@@ -41,7 +41,7 @@ public:
     GLuint vbo;
     GLuint ebo;
     std::vector<Vertex> mVertices;
-    std::vector<unsigned int> mIndices;
+    std::vector<GLuint> mIndices;
     std::vector<Texture> mTextures;
 
 private:
@@ -70,13 +70,13 @@ private:
 
         // vertex positions
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), Vertex::posOffset());
         // vertex normals
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, mNormals));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), Vertex::normalsOffset());
         // vertex texture coords
         glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, mTexCoords));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), Vertex::texCoordsOffset());
 
         glBindVertexArray(0);
     }

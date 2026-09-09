@@ -2,7 +2,9 @@
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
+#include <algorithm>
 #include "./Texture.hpp"
+#include "./Vertex.hpp"
 #include "./Renderable.hpp"
 #include "./Transformable.hpp"
 #include "./RenderContext.hpp"
@@ -27,12 +29,12 @@ public:
 
     int getIndexCount() const
     {
-        return indexCount;
+        return indices.size();
     }
 
     int getVertexCount() const
     {
-        return vertexCount;
+        return vertices.size();
     }
 
     void render(const RenderContext &context) override
@@ -43,7 +45,7 @@ public:
         context.shader.setUniform1i("gSampler", 0);
 
         glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
@@ -55,16 +57,16 @@ public:
             glDeleteBuffers(1, &vao);
         if (ebo)
             glDeleteBuffers(1, &ebo);
-        if (colorBuffer)
-            glDeleteBuffers(1, &colorBuffer);
-        if (vboTex)
-            glDeleteBuffers(1, &vboTex);
     }
 
 protected:
     Shape() = default;
 
-    Shape(int iCount, int vCount) : indexCount(iCount), vertexCount(vCount) {}
+    Shape(int iCount, int vCount)
+    {
+        vertices.reserve(vCount);
+        indices.reserve(iCount);
+    }
 
     void setBuffers()
     {
@@ -79,7 +81,7 @@ protected:
 
             glGenBuffers(1, &vbo);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
             glEnableVertexAttribArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -88,69 +90,55 @@ protected:
                 3,
                 GL_FLOAT,
                 GL_FALSE,
-                0,
-                (void *)0);
-        }
-        // set the color buffer
-        if (!colors.empty())
-        {
+                sizeof(Vertex),
+                Vertex::posOffset());
 
-            glGenBuffers(1, &colorBuffer);
-            glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-            glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
+            // setting colors
+            if (std::all_of(vertices.begin(), vertices.end(), [](const auto &v)
+                            { return v.hasColors(); }))
+            {
+                glEnableVertexAttribArray(1);
+                glVertexAttribPointer(
+                    1,
+                    3,
+                    GL_FLOAT,
+                    GL_FALSE,
+                    sizeof(Vertex),
+                    Vertex::colorOffset());
+            }
 
-            glEnableVertexAttribArray(1);
-            glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-            glVertexAttribPointer(
-                1,
-                3,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *)0);
-        }
+            // set the texture buffer
+            if (std::all_of(vertices.begin(), vertices.end(), [](const Vertex &v)
+                            { return v.hasTexCoords(); }))
+            {
+                std::cout << "in tex setting" << std::endl;
+                glEnableVertexAttribArray(2);
+                glVertexAttribPointer(
+                    2,
+                    2,
+                    GL_FLOAT,
+                    GL_FALSE,
+                    sizeof(Vertex),
+                    Vertex::texCoordsOffset());
+            }
 
-        // set the texture buffer
-        if (!texCoords.empty())
-        {
-
-            glGenBuffers(1, &vboTex);
-            glBindBuffer(GL_ARRAY_BUFFER, vboTex);
-            glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(GLfloat), texCoords.data(), GL_STATIC_DRAW);
-
-            glEnableVertexAttribArray(1);
-            glBindBuffer(GL_ARRAY_BUFFER, vboTex);
-            glVertexAttribPointer(
-                1,
-                2,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *)0);
-        }
-
-        // ebo setting
-        if (!indices.empty())
-        {
-            glGenBuffers(1, &ebo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+            // ebo setting
+            if (!indices.empty())
+            {
+                glGenBuffers(1, &ebo);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+            }
         }
 
         glBindVertexArray(0);
     }
 
-    int indexCount;
-    int vertexCount;
     GLuint vbo;
     GLuint vao;
     GLuint ebo;
-    GLuint colorBuffer;
-    GLuint vboTex;
 
     Texture *texture;
-    std::vector<GLfloat> vertices;
-    std::vector<GLfloat> colors;
+    std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
-    std::vector<GLfloat> texCoords;
 };
