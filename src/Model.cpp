@@ -1,124 +1,100 @@
+#include "../include/Model.hpp"
 #include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
-#include "../include/Model.hpp"
+#include <glm/gtc/type_precision.hpp>
 
 Model::Model(const std::string &fileName)
 {
+    mFileName = fileName;
     load(fileName);
 }
 
-bool Model::load(const std::string &fileName)
+void Model::load(const std::string &fileName)
 {
-    bool res = false;
-
     clear();
+
+    mFileName = fileName;
 
     Assimp::Importer importer;
 
     const aiScene *pScene = importer.ReadFile(fileName.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
     if (pScene)
-        res = initFromScene(pScene, fileName);
+        initFromScene(pScene);
     else
         std::cerr << "Error while parsing the model at: " << fileName << std::endl;
-
-    return res;
 }
 
-void Model::render(RenderContext &context)
+void Model::render(const RenderContext &context)
 {
 
-    // glm::mat4 oldModelMatrix = context.modelMatrix;
+    RenderContext newContext = context;
 
-    // context.modelMatrix = context.modelMatrix * getModelMatrix();
+    newContext.modelMatrix = context.modelMatrix * getModelMatrix();
 
-    // for (auto &mesh : mEntries)
-    // {
-    //     mesh.render(context);
-    // }
-
-    // glDisableVertexAttribArray(0);
-    // glDisableVertexAttribArray(1);
-    // glDisableVertexAttribArray(2);
-
-    // context.modelMatrix = oldModelMatrix;
+    for (auto &mesh : mMeshes)
+        mesh.render(newContext);
 }
+
 void Model::clear()
 {
-    mEntries.clear();
+    mMeshes.clear();
     mTextures.clear();
+    mFileName.clear();
 }
 
-bool Model::initFromScene(const aiScene *scene, const std::string &fileName)
+void Model::initFromScene(const aiScene *scene)
 {
-    mEntries.resize(scene->mNumMeshes);
+    mMeshes.resize(scene->mNumMeshes);
     mTextures.resize(scene->mNumMaterials);
 
-    for (size_t i = 0; i < mEntries.size(); ++i)
+    for (size_t i = 0; i < scene->mNumMeshes; ++i)
     {
         const aiMesh *mesh = scene->mMeshes[i];
-        initMesh(i, mesh);
+        auto createdMesh = initMesh(i, mesh, scene);
+        mMeshes.push_back(createdMesh);
     }
-
-    return initMaterials(scene, fileName);
 }
 
-bool Model::initMaterials(const aiScene *scene, const std::string &fileName)
+std::vector<Texture> Model::initMaterials(aiMaterial *mat, aiTextureType type)
 {
-    bool res = false;
+    std::vector<Texture> textures;
+    textures.reserve(mat->GetTextureCount(type));
     std::string dir;
 
     // find the object directory
-    std::size_t lastSlash = fileName.find_last_of("/\\");
+    std::size_t lastSlash = mFileName.find_last_of("/\\");
     if (lastSlash != std::string::npos)
     {
-        dir = fileName.substr(0, lastSlash);
+        dir = mFileName.substr(0, lastSlash);
     }
     else
     {
         dir = ".";
     }
 
-    for (unsigned int i = 0; i < scene->mNumMaterials; ++i)
+    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
-        const aiMaterial *pMaterial = scene->mMaterials[i];
-        mTextures.at(i) = nullptr;
-        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
-        {
-            aiString Path;
-
-            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, nullptr, nullptr, nullptr, nullptr, nullptr) == AI_SUCCESS)
-            {
-                std::string FullPath = dir + "/" + Path.data;
-                mTextures.at(i) = new Texture{GL_TEXTURE_2D, FullPath};
-
-                if (!mTextures.at(i)->load())
-                {
-                    std::cerr << "Error loading texture " << FullPath << std::endl;
-                    delete mTextures.at(i);
-                    mTextures.at(i) = nullptr;
-                    res = false;
-                }
-            }
-        }
-        // fallback
-        if (!mTextures.at(i))
-        {
-            mTextures.at(i) = new Texture{GL_TEXTURE_2D, "./assets/textures/default.png"};
-            res = mTextures.at(i)->load();
-        }
+        aiString str;
+        mat->GetTexture(type, i, &str);
+        Texture texture{GL_TEXTURE_2D, dir + '/' + str.C_Str()};
+        textures.push_back(texture);
     }
 
-    return res;
+    return textures;
 }
 
-void Model::initMesh(int index, const aiMesh *mesh)
+Mesh Model::initMesh(int index, const aiMesh *mesh, const aiScene *scene)
 {
-    mEntries.at(index).materialIndex = mesh->mMaterialIndex;
 
     std::vector<Vertex> vertices;
+    vertices.reserve(mesh->mNumVertices);
+
     std::vector<unsigned int> indices;
+    indices.reserve(mesh->mNumFaces * 3);
+
+    std::vector<Texture> textures;
 
     const aiVector3D zero3D{0.f, 0.f, 0.f};
 
@@ -146,5 +122,20 @@ void Model::initMesh(int index, const aiMesh *mesh)
         indices.push_back(face.mIndices[2]);
     }
 
-    mEntries.at(index).init(vertices, indices);
+    // initializing and attaching the textures
+    if (mesh->mMaterialIndex >= 0)
+    {
+        aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+        std::vector<Texture> diffuseMaps = initMaterials(material,
+                                                         aiTextureType_DIFFUSE);
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        std::vector<Texture> specularMaps = initMaterials(material,
+                                                          aiTextureType_SPECULAR);
+        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    }
+
+    return Mesh{
+        vertices,
+        indices,
+        textures};
 }

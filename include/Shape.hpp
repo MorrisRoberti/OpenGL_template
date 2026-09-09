@@ -35,7 +35,7 @@ public:
         return vertexCount;
     }
 
-    void render(RenderContext &context) override
+    void render(const RenderContext &context) override
     {
         glm::mat4 currentModelMatrix = context.modelMatrix * getModelMatrix();
 

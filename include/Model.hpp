@@ -3,13 +3,10 @@
 #include <string>
 #include <vector>
 #include <assimp/scene.h>
-#include <glm/gtc/type_precision.hpp>
 #include "./Texture.hpp"
 #include "./Renderable.hpp"
 #include "./Transformable.hpp"
 #include "./RenderContext.hpp"
-#include "./Shader.hpp"
-#include "./Vertex.hpp"
 #include "./Mesh.hpp"
 
 class Model : public Transformable, public Renderable
@@ -18,17 +15,18 @@ class Model : public Transformable, public Renderable
 public:
     Model(const std::string &fileName);
 
-    bool load(const std::string &fileName);
+    void load(const std::string &fileName);
 
-    void render(RenderContext &context) override;
+    void render(const RenderContext &context) override;
 
 private:
     void clear();
 
-    bool initFromScene(const aiScene *scene, const std::string &fileName);
-    bool initMaterials(const aiScene *scene, const std::string &fileName);
-    void initMesh(int index, const aiMesh *mesh);
+    void initFromScene(const aiScene *scene);
+    std::vector<Texture> initMaterials(aiMaterial *mat, aiTextureType type);
+    Mesh initMesh(int index, const aiMesh *mesh, const aiScene *scene);
 
-    std::vector<Mesh> mEntries;
-    std::vector<Texture *> mTextures;
+    std::vector<Mesh> mMeshes;
+    std::vector<Texture> mTextures;
+    std::string mFileName;
 };
