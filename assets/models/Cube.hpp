@@ -1,7 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
-
+#include <array>
 #include "../../include/Shape.hpp"
 
 class Cube : public Shape

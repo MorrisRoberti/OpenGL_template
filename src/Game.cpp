@@ -158,6 +158,6 @@ void Game::processInput(float deltaTime)
 
 void Game::loadShaders()
 {
-    shader = new Shader{"/home/morris/Workspace/scrap_workspace/opengl_test/boilerplate/shaders/tex/tex.vert",
-                        "/home/morris/Workspace/scrap_workspace/opengl_test/boilerplate/shaders/tex/tex.frag"};
+    shader = new Shader{"./shaders/tex/tex.vert",
+                        "./shaders/tex/tex.frag"};
 }
