@@ -111,7 +111,6 @@ protected:
             if (std::all_of(vertices.begin(), vertices.end(), [](const Vertex &v)
                             { return v.hasTexCoords(); }))
             {
-                std::cout << "in tex setting" << std::endl;
                 glEnableVertexAttribArray(2);
                 glVertexAttribPointer(
                     2,

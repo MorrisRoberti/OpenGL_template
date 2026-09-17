@@ -87,14 +87,14 @@ float Camera::getFarPlane() const
 
 void Camera::translate(glm::vec3 translation)
 {
-    glm::vec3 forward = glm::normalize(target - position);
+    glm::vec3 forward = glm::normalize(glm::vec3{target.x - position.x, 1.0f, target.z - position.z});
     glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 right = glm::normalize(glm::cross(forward, worldUp));
     glm::vec3 up = glm::normalize(glm::cross(right, forward));
 
-    glm::vec3 worldDisplacement = (right * translation.x) +
-                                  (up * translation.y) +
-                                  (forward * translation.z);
+    glm::vec3 worldDisplacement = (right * translation.x +
+                                   up * translation.y +
+                                   forward * translation.z);
 
     position += worldDisplacement;
     target += worldDisplacement;
@@ -104,10 +104,10 @@ void Camera::rotate(glm::vec3 axis, float angle)
 {
     glm::vec3 direction = target - position;
 
-    glm::mat4 rotation = glm::rotate(
-        glm::mat4(1.0f),
-        glm::radians(angle),
-        glm::normalize(axis));
+    glm::quat deltaRotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
+
+    glm::quat rotation = deltaRotation;
+    rotation = glm::normalize(rotation);
 
     glm::vec3 newDirection = glm::vec3(rotation * glm::vec4(direction, 0.0f));
 
