@@ -1,10 +1,8 @@
 #include "../include/Camera.hpp"
 
-Camera::Camera(glm::vec3 pos, glm::vec3 targ, glm::vec3 upVec)
+Camera::Camera(glm::vec3 pos)
 {
-    setTarget(targ);
     setPosition(pos);
-    setUpVec(upVec);
 
     float aspRatio = 4.0f / 3.0f;
     setFOV(45.f);
@@ -18,51 +16,36 @@ Camera::Camera(glm::vec3 pos, glm::vec3 targ, glm::vec3 upVec)
 void Camera::setPosition(glm::vec3 newPosition)
 {
     position = newPosition;
-}
-
-void Camera::setTarget(glm::vec3 newTarget)
-{
-    target = newTarget;
-}
-
-void Camera::setUpVec(glm::vec3 upVec)
-{
-    up = upVec;
+    dirty = true;
 }
 
 void Camera::setFOV(float fieldOfView)
 {
     fov = fieldOfView;
+    dirty = true;
 }
 
 void Camera::setAspectRatio(float ratio)
 {
     aspectRatio = ratio;
+    dirty = true;
 }
 
 void Camera::setNearPlane(float newNearPlane)
 {
     nearPlane = newNearPlane;
+    dirty = true;
 }
 
 void Camera::setFarPlane(float newFarPlane)
 {
     farPlane = newFarPlane;
+    dirty = true;
 }
 
 glm::vec3 Camera::getPosition() const
 {
     return position;
-}
-
-glm::vec3 Camera::getTarget() const
-{
-    return target;
-}
-
-glm::vec3 Camera::getUpVec() const
-{
-    return up;
 }
 
 float Camera::getFOV() const
@@ -87,47 +70,57 @@ float Camera::getFarPlane() const
 
 void Camera::translate(glm::vec3 translation)
 {
-    glm::vec3 forward = glm::normalize(glm::vec3{target.x - position.x, 1.0f, target.z - position.z});
-    glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::vec3 right = glm::normalize(glm::cross(forward, worldUp));
-    glm::vec3 up = glm::normalize(glm::cross(right, forward));
+    glm::vec3 forward = orientation * glm::vec3(0.0f, 0.0f, -1.0f);
 
-    glm::vec3 worldDisplacement = (right * translation.x +
-                                   up * translation.y +
-                                   forward * translation.z);
+    glm::vec3 right = orientation * glm::vec3(1.0f, 0.0f, 0.0f);
 
-    position += worldDisplacement;
-    target += worldDisplacement;
+    glm::vec3 flatForward = glm::normalize(glm::vec3{forward.x, 0.0f, forward.z});
+    glm::vec3 flatRight = glm::normalize(glm::vec3{right.x, 0.0f, right.z});
+
+    position += flatRight * translation.x;
+    position += flatForward * translation.z;
+    position.y += translation.y;
+    dirty = true;
 }
 
 void Camera::rotate(glm::vec3 axis, float angle)
 {
-    glm::vec3 direction = target - position;
-
     glm::quat deltaRotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
 
-    glm::quat rotation = deltaRotation;
-    rotation = glm::normalize(rotation);
+    orientation = orientation * deltaRotation;
 
-    glm::vec3 newDirection = glm::vec3(rotation * glm::vec4(direction, 0.0f));
-
-    target = position + newDirection;
+    orientation = glm::normalize(orientation);
+    dirty = true;
 }
 
 glm::mat4 &Camera::getProjectionMatrix()
 {
-    updateMatrices();
+    if (dirty)
+    {
+        updateMatrices();
+        dirty = false;
+    }
     return projectionMatrix;
 }
 
 glm::mat4 &Camera::getViewMatrix()
 {
-    updateMatrices();
+    if (dirty)
+    {
+        updateMatrices();
+        dirty = false;
+    }
     return viewMatrix;
 }
 
 void Camera::updateMatrices()
 {
-    viewMatrix = glm::lookAt(position, target, up);
+    glm::quat inverseRotation = glm::conjugate(orientation);
+
+    glm::mat4 viewRotation = glm::mat4_cast(inverseRotation);
+
+    glm::mat4 viewTranslation = glm::translate(glm::mat4(1.0f), -position);
+
+    viewMatrix = viewRotation * viewTranslation;
     projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
 }

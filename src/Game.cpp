@@ -30,10 +30,16 @@ void Game::run()
     Model model{"./assets/models/Skull/12140_Skull_v3_L2.obj"};
     model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
     model.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
-    Texture t{GL_TEXTURE_2D, "./assets/textures/brick_texture.jpg"};
-    t.bind(GL_TEXTURE0);
 
-    Cube c{1.0f, &t};
+    Model model2{"./assets/models/Skull/12140_Skull_v3_L2.obj"};
+    model2.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+    model2.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
+    model2.setPosition(glm::vec3{0.0f, 0.0f, -20.0f});
+
+    // Texture t{GL_TEXTURE_2D, "./assets/textures/brick_texture.jpg"};
+    // t.bind(GL_TEXTURE0);
+
+    // Cube c{1.0f, &t};
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))
@@ -48,6 +54,7 @@ void Game::run()
 
         // renderer->render(c, *camera, *shader);
         renderer->render(model, *camera, *shader);
+        renderer->render(model2, *camera, *shader);
 
         renderer->clear(window);
     }
@@ -91,7 +98,7 @@ void Game::initWindow()
 
 void Game::initCamera()
 {
-    camera = new Camera{glm::vec3{0.f, 0.f, 10.f}, glm::vec3{0.f}, glm::vec3{0.f, 1.f, 0.f}};
+    camera = new Camera{glm::vec3{0.f, 0.f, -10.f}};
     glm::mat4 transformation = camera->getProjectionMatrix() * camera->getViewMatrix() * glm::mat4(1.0f);
     shader->setMat4("transformation", transformation);
 }

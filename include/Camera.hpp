@@ -5,13 +5,9 @@
 class Camera
 {
 public:
-    Camera(glm::vec3 pos, glm::vec3 targ, glm::vec3 upVec);
+    Camera(glm::vec3 pos);
 
     void setPosition(glm::vec3 newPosition);
-
-    void setTarget(glm::vec3 newTarget);
-
-    void setUpVec(glm::vec3 upVec);
 
     void setFOV(float fieldOfView);
 
@@ -22,10 +18,6 @@ public:
     void setFarPlane(float newFarPlane);
 
     glm::vec3 getPosition() const;
-
-    glm::vec3 getTarget() const;
-
-    glm::vec3 getUpVec() const;
 
     float getFOV() const;
 
@@ -47,8 +39,8 @@ public:
 
 private:
     glm::vec3 position;
-    glm::vec3 target;
-    glm::vec3 up;
+
+    glm::quat orientation;
 
     float fov;
     float aspectRatio;
@@ -57,4 +49,5 @@ private:
 
     glm::mat4 viewMatrix;
     glm::mat4 projectionMatrix;
+    bool dirty{false};
 };
