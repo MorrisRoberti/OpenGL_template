@@ -1,121 +1,121 @@
 #pragma once
+#include "./Renderable.hpp"
+#include "./Texture.hpp"
+#include "./Transformable.hpp"
+#include "./Vertex.hpp"
 #include <GL/glew.h>
 #include <vector>
-#include "./Texture.hpp"
-#include "./Vertex.hpp"
-#include "./Transformable.hpp"
-#include "./Renderable.hpp"
 
-class Mesh : public Transformable, public Renderable
-{
+class Mesh : public Transformable, public Renderable {
 public:
-    Mesh() = default;
+  Mesh() = default;
 
-    Mesh(const std::vector<Vertex> &vertices,
-         const std::vector<GLuint> &indices,
-         const std::vector<Texture> &textures) : mVertices(vertices),
-                                                 mIndices(indices), mTextures(textures)
-    {
-        init();
-    };
+  Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices,
+       const std::vector<Texture> &textures)
+      : mVertices(vertices), mIndices(indices), mTextures(textures) {
+    init();
+  };
 
-    void render(const RenderContext &context) override
-    {
+  void render(const RenderContext &context) override {
 
-        glm::mat4 currentModelMatrix = context.modelMatrix * getModelMatrix();
+    glm::mat4 currentModelMatrix = context.modelMatrix * getModelMatrix();
 
-        context.shader.setMat4("model", currentModelMatrix);
-        context.shader.setUniform1i("gSampler", 0);
+    context.shader.setMat4("model", currentModelMatrix);
+    context.shader.setUniform1i("gSampler", 0);
 
-        for (size_t i = 0; i < mTextures.size(); ++i)
-        {
-            mTextures[i].bind(GL_TEXTURE0 + i);
-        }
-
-        // draw mesh
-        glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+    for (size_t i = 0; i < mTextures.size(); ++i) {
+      mTextures[i].bind(GL_TEXTURE0 + i);
     }
 
-    void setInsancedAttribs()
-    {
+    // draw mesh
+    glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+  }
 
-        for (size_t i = 0; i < mTextures.size(); ++i)
-        {
-            mTextures[i].bind(GL_TEXTURE0 + i);
-        }
+  void renderInstanced(int instancesCount) const {
+    glBindVertexArray(vao);
 
-        glBindVertexArray(vao);
+    glDrawElementsInstanced(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0,
+                            instancesCount);
+    glBindVertexArray(0);
+  }
 
-        std::size_t vec4Size = sizeof(glm::vec4);
+  void setInsancedAttribs() {
 
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)0);
-
-        glEnableVertexAttribArray(4);
-        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)(1 * vec4Size));
-
-        glEnableVertexAttribArray(5);
-        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)(2 * vec4Size));
-
-        glEnableVertexAttribArray(6);
-        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)(3 * vec4Size));
-
-        glVertexAttribDivisor(3, 1);
-        glVertexAttribDivisor(4, 1);
-        glVertexAttribDivisor(5, 1);
-        glVertexAttribDivisor(6, 1);
-
-        glBindVertexArray(0);
+    for (size_t i = 0; i < mTextures.size(); ++i) {
+      mTextures[i].bind(GL_TEXTURE0 + i);
     }
 
-    const GLuint getVao() const
-    {
-        return vao;
-    }
+    glBindVertexArray(vao);
 
-    GLuint vao;
-    GLuint vbo;
-    GLuint ebo;
-    std::vector<Vertex> mVertices;
-    std::vector<GLuint> mIndices;
-    std::vector<Texture> mTextures;
+    std::size_t vec4Size = sizeof(glm::vec4);
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)0);
+
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size,
+                          (void *)(1 * vec4Size));
+
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size,
+                          (void *)(2 * vec4Size));
+
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size,
+                          (void *)(3 * vec4Size));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+
+    glBindVertexArray(0);
+  }
+
+  const GLuint getVao() const { return vao; }
+
+  GLuint vao;
+  GLuint vbo;
+  GLuint ebo;
+  std::vector<Vertex> mVertices;
+  std::vector<GLuint> mIndices;
+  std::vector<Texture> mTextures;
 
 private:
-    void init()
-    {
+  void init() {
 
-        glGenVertexArrays(1, &vao);
-        glGenBuffers(1, &vbo);
-        glGenBuffers(1, &ebo);
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
 
-        glBindVertexArray(vao);
+    glBindVertexArray(vao);
 
-        // vbo setting
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(Vertex) * mVertices.size(),
-                     &mVertices.at(0),
-                     GL_STATIC_DRAW);
+    // vbo setting
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mVertices.size(),
+                 &mVertices.at(0), GL_STATIC_DRAW);
 
-        // ebo setting
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     sizeof(unsigned int) * mIndices.size(),
-                     &mIndices.at(0),
-                     GL_STATIC_DRAW);
+    // ebo setting
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 sizeof(unsigned int) * mIndices.size(), &mIndices.at(0),
+                 GL_STATIC_DRAW);
 
-        // vertex positions
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), Vertex::posOffset());
-        // vertex normals
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), Vertex::normalsOffset());
-        // vertex texture coords
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), Vertex::texCoordsOffset());
+    // vertex positions
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          Vertex::posOffset());
+    // vertex normals
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          Vertex::normalsOffset());
+    // vertex texture coords
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          Vertex::texCoordsOffset());
 
-        glBindVertexArray(0);
-    }
+    glBindVertexArray(0);
+  }
 };
