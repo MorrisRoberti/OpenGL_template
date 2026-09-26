@@ -21,6 +21,7 @@ public:
 
     void render(const RenderContext &context) override
     {
+
         glm::mat4 currentModelMatrix = context.modelMatrix * getModelMatrix();
 
         context.shader.setMat4("model", currentModelMatrix);
@@ -35,6 +36,43 @@ public:
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+    }
+
+    void setInsancedAttribs()
+    {
+
+        for (size_t i = 0; i < mTextures.size(); ++i)
+        {
+            mTextures[i].bind(GL_TEXTURE0 + i);
+        }
+
+        glBindVertexArray(vao);
+
+        std::size_t vec4Size = sizeof(glm::vec4);
+
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)0);
+
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)(1 * vec4Size));
+
+        glEnableVertexAttribArray(5);
+        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)(2 * vec4Size));
+
+        glEnableVertexAttribArray(6);
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)(3 * vec4Size));
+
+        glVertexAttribDivisor(3, 1);
+        glVertexAttribDivisor(4, 1);
+        glVertexAttribDivisor(5, 1);
+        glVertexAttribDivisor(6, 1);
+
+        glBindVertexArray(0);
+    }
+
+    const GLuint getVao() const
+    {
+        return vao;
     }
 
     GLuint vao;

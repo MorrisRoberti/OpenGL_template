@@ -2,6 +2,7 @@
 #include "../assets/2d_shapes/Square.hpp"
 #include "../assets/models/Cube.hpp"
 #include "../include/Texture.hpp"
+#include "../include/InstancedModel.hpp"
 #include "../include/Model.hpp"
 #include <iostream>
 #include <algorithm>
@@ -24,17 +25,37 @@ Game::~Game()
     glfwTerminate();
 }
 
+std::vector<glm::mat4> genMat(int n)
+{
+    std::vector<glm::mat4> modelMatrices(n, glm::mat4{1.0f});
+
+    modelMatrices[0] = glm::rotate(modelMatrices[0], glm::radians(-90.f), glm::vec3{1.0f, 0.f, 0.f});
+    modelMatrices[0] = glm::scale(modelMatrices[0], glm::vec3{0.1f, 0.1f, 0.1f});
+
+    for (int i = 1; i < n; ++i)
+    {
+        modelMatrices[i] = glm::translate(modelMatrices[i], glm::vec3{i * 2.0f, 0.f, 0.f});
+        modelMatrices[i] = glm::rotate(modelMatrices[i], glm::radians(-90.f), glm::vec3{1.0f, 0.f, 0.f});
+        modelMatrices[i] = glm::scale(modelMatrices[i], glm::vec3{0.1f, 0.1f, 0.1f});
+    }
+
+    return modelMatrices;
+}
+
 void Game::run()
 {
 
-    Model model{"./assets/models/Skull/12140_Skull_v3_L2.obj"};
-    model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+    const auto v = genMat(100);
+    InstancedModel model{
+        "./assets/models/Skull/12140_Skull_v3_L2.obj",
+        std::move(v),
+    };
     model.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
 
-    Model model2{"./assets/models/Skull/12140_Skull_v3_L2.obj"};
-    model2.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
-    model2.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
-    model2.setPosition(glm::vec3{0.0f, 0.0f, -20.0f});
+    // Model model2{"./assets/models/Skull/12140_Skull_v3_L2.obj"};
+    // model2.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+    // model2.setScale(glm::vec3{0.1f, 0.1f, 0.1f});
+    // model2.setPosition(glm::vec3{0.0f, 0.0f, -20.0f});
 
     // Texture t{GL_TEXTURE_2D, "./assets/textures/brick_texture.jpg"};
     // t.bind(GL_TEXTURE0);
@@ -54,7 +75,7 @@ void Game::run()
 
         // renderer->render(c, *camera, *shader);
         renderer->render(model, *camera, *shader);
-        renderer->render(model2, *camera, *shader);
+        // renderer->render(model2, *camera, *shader);
 
         renderer->clear(window);
     }
@@ -98,7 +119,7 @@ void Game::initWindow()
 
 void Game::initCamera()
 {
-    camera = new Camera{glm::vec3{0.f, 0.f, -10.f}};
+    camera = new Camera{glm::vec3{0.f, 0.f, 10.f}};
     glm::mat4 transformation = camera->getProjectionMatrix() * camera->getViewMatrix() * glm::mat4(1.0f);
     shader->setMat4("transformation", transformation);
 }
@@ -166,6 +187,6 @@ void Game::processInput(float deltaTime)
 
 void Game::loadShaders()
 {
-    shader = new Shader{"./shaders/tex/tex.vert",
-                        "./shaders/tex/tex.frag"};
+    shader = new Shader{"./shaders/instanced/instanced.vert",
+                        "./shaders/instanced/instanced.frag"};
 }
