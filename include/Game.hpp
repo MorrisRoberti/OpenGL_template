@@ -5,7 +5,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class Game {
+class Game
+{
 
 public:
   Game();
@@ -35,5 +36,5 @@ private:
   glm::vec2 lastMousePos{0.f, 0.f};
   glm::vec2 angle{0.f, 0.f};
 
-  float sensitivity{5.f};
+  float sensitivity{3.f};
 };
