@@ -1,8 +1,9 @@
 #pragma once
+#include "./Viewable.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class Camera
+class Camera : public Viewable
 {
 public:
     Camera(glm::vec3 pos);
@@ -31,15 +32,15 @@ public:
 
     void rotate(glm::vec3 axis, float angle);
 
-    glm::mat4 &getProjectionMatrix();
+    const glm::mat4 &getProjectionMatrix() override;
 
-    glm::mat4 &getViewMatrix();
-
-    void updateMatrices();
+    const glm::mat4 &getViewMatrix() override;
 
 private:
-    glm::vec3 position{0.f, 0.f, 8.f};
-    glm::vec3 target;
+    void updateMatrices();
+
+    glm::vec3 position{0.f, 0.f, 0.f};
+    glm::vec3 target{0.f, 0.f, 8.f};
     glm::vec3 up{0.f, 1.f, 0.f};
 
     float fov;

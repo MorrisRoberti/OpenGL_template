@@ -1,5 +1,6 @@
 #pragma once
 #include "../include/Camera.hpp"
+#include "../include/UICamera.hpp"
 #include "../include/Renderer.hpp"
 #include "../include/Shader.hpp"
 #include <GL/glew.h>
@@ -28,6 +29,7 @@ private:
 
   GLFWwindow *window;
   Camera *camera;
+  UICamera *ui;
   Shader *shader;
   Renderer *renderer;
 

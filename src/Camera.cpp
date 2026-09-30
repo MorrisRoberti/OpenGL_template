@@ -71,7 +71,7 @@ float Camera::getFarPlane() const
 
 void Camera::translate(glm::vec3 translation)
 {
-    glm::vec3 forward = glm::normalize(glm::vec3{target.x - position.x, 1.0f, target.z - position.z});
+    glm::vec3 forward = glm::normalize(glm::vec3{target.x - position.x, 0.0f, target.z - position.z});
     glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 right = glm::normalize(glm::cross(forward, worldUp));
     glm::vec3 up = glm::normalize(glm::cross(right, forward));
@@ -104,7 +104,7 @@ void Camera::rotate(glm::vec3 axis, float angle)
     dirty = true;
 }
 
-glm::mat4 &Camera::getProjectionMatrix()
+const glm::mat4 &Camera::getProjectionMatrix()
 {
     if (dirty)
     {
@@ -114,7 +114,7 @@ glm::mat4 &Camera::getProjectionMatrix()
     return projectionMatrix;
 }
 
-glm::mat4 &Camera::getViewMatrix()
+const glm::mat4 &Camera::getViewMatrix()
 {
     if (dirty)
     {

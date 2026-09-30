@@ -18,7 +18,7 @@ public:
 
     void use();
 
-    void setMat4(const std::string &uniformName, glm::mat4 matrix);
+    void setMat4(const std::string &uniformName, const glm::mat4 &matrix);
 
     void setUniform1i(const std::string &uniformName, int value);
 

@@ -100,7 +100,7 @@ void Shader::use()
     glUseProgram(programId);
 }
 
-void Shader::setMat4(const std::string &uniformName, glm::mat4 matrix)
+void Shader::setMat4(const std::string &uniformName, const glm::mat4 &matrix)
 {
     GLint location = glGetUniformLocation(programId, uniformName.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));

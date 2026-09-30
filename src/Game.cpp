@@ -51,11 +51,14 @@ void Game::run()
 
   // auto v = genMat(100);
   // auto v2 = v;
-  Model model{
-      "./assets/models/Skull/12140_Skull_v3_L2.obj",
-  };
-  model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
-  model.scale(glm::vec3{0.01f, 0.01f, 0.01f});
+  // Model model{
+  //     "./assets/models/Skull/12140_Skull_v3_L2.obj",
+  // };
+  // model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+  // model.scale(glm::vec3{0.01f, 0.01f, 0.01f});
+
+  Square s{10.f, glm::vec3{1.0f, 0.8f, 0.5f}};
+  s.setPosition(glm::vec3{0.f, -10.f, 0.f});
 
   Model model2{
       "./assets/models/Skull/12140_Skull_v3_L2.obj",
@@ -75,9 +78,10 @@ void Game::run()
 
     processInput(deltaTime);
 
-    renderer->render(model, *camera, *shader);
+    // renderer->render(model, *camera, *shader);
     renderer->render(model2, *camera, *shader);
 
+    renderer->render(s, *ui, *shader); // TO MAKE IT WORK I NEED THE THE RIGHT HANDLING OF LAYOUTS IN THE SHADER (ADD LAYOUT 1)
     renderer->clear(window);
   }
 }
@@ -120,6 +124,9 @@ void Game::initCamera()
   glm::mat4 transformation =
       camera->getProjectionMatrix() * camera->getViewMatrix() * glm::mat4(1.0f);
   shader->setMat4("transformation", transformation);
+
+  // ui
+  ui = new UICamera{0.f, 1920.f, 0.f, 1080.f, -1.0f, 1.0f};
 }
 
 void Game::setCallbacks()
