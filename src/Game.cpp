@@ -49,15 +49,22 @@ std::vector<glm::mat4> genMat(int n)
 void Game::run()
 {
 
-  auto v = genMat(100);
-  auto v2 = v;
-  InstancedModel model{
+  // auto v = genMat(100);
+  // auto v2 = v;
+  Model model{
       "./assets/models/Skull/12140_Skull_v3_L2.obj",
-      std::move(v),
   };
+  model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+  model.scale(glm::vec3{0.01f, 0.01f, 0.01f});
+
+  Model model2{
+      "./assets/models/Skull/12140_Skull_v3_L2.obj",
+  };
+  model2.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
+  model2.scale(glm::vec3{0.01f, 0.01f, 0.01f});
+  model2.setPosition(glm::vec3{0.f, 0.f, -50.f});
 
   float lastFrame = 0.0f;
-  float i{0.f};
   while (!glfwWindowShouldClose(window))
   {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -68,20 +75,8 @@ void Game::run()
 
     processInput(deltaTime);
 
-    for (int k = 0; k < v2.size(); ++k)
-    {
-
-      v2[k] = glm::translate(glm::mat4{1.f}, glm::vec3{i + k, 0.f, 0.f});
-      v2[k] = glm::rotate(v2[k], glm::radians(-90.f),
-                          glm::vec3{1.0f, 0.f, 0.f});
-      v2[k] = glm::scale(v2[k], glm::vec3{0.1f, 0.1f, 0.1f});
-    }
-
-    model.setModelMatrices(v2);
-
     renderer->render(model, *camera, *shader);
-
-    i += .1f;
+    renderer->render(model2, *camera, *shader);
 
     renderer->clear(window);
   }
@@ -168,7 +163,7 @@ void Game::processInput(float deltaTime)
   lastMousePos.x = mousePos.x;
   lastMousePos.y = mousePos.y;
 
-  float offset = 5.f * deltaTime;
+  float offset = 15.f * deltaTime;
 
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
   {
@@ -193,6 +188,6 @@ void Game::processInput(float deltaTime)
 
 void Game::loadShaders()
 {
-  shader = new Shader{"./shaders/instanced/instanced.vert",
-                      "./shaders/instanced/instanced.frag"};
+  shader = new Shader{"./shaders/tex/tex.vert",
+                      "./shaders/tex/tex.frag"};
 }

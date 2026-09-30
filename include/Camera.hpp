@@ -38,9 +38,9 @@ public:
     void updateMatrices();
 
 private:
-    glm::vec3 position;
-
-    glm::quat orientation;
+    glm::vec3 position{0.f, 0.f, 8.f};
+    glm::vec3 target;
+    glm::vec3 up{0.f, 1.f, 0.f};
 
     float fov;
     float aspectRatio;

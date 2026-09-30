@@ -1,4 +1,5 @@
 #include "../include/Camera.hpp"
+#include <iostream>
 
 Camera::Camera(glm::vec3 pos)
 {
@@ -70,26 +71,36 @@ float Camera::getFarPlane() const
 
 void Camera::translate(glm::vec3 translation)
 {
-    glm::vec3 forward = orientation * glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 forward = glm::normalize(glm::vec3{target.x - position.x, 1.0f, target.z - position.z});
+    glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 right = glm::normalize(glm::cross(forward, worldUp));
+    glm::vec3 up = glm::normalize(glm::cross(right, forward));
 
-    glm::vec3 right = orientation * glm::vec3(1.0f, 0.0f, 0.0f);
+    glm::vec3 worldDisplacement = (right * translation.x +
+                                   up * translation.y +
+                                   forward * translation.z);
 
-    glm::vec3 flatForward = glm::normalize(glm::vec3{forward.x, 0.0f, forward.z});
-    glm::vec3 flatRight = glm::normalize(glm::vec3{right.x, 0.0f, right.z});
-
-    position += flatRight * translation.x;
-    position += flatForward * translation.z;
-    position.y += translation.y;
+    position += worldDisplacement;
+    target += worldDisplacement;
     dirty = true;
 }
 
 void Camera::rotate(glm::vec3 axis, float angle)
 {
+    glm::vec3 direction = target - position;
+
+    std::cout << "x: " << direction.x << " y:" << direction.y << " z: " << direction.z << std::endl;
+    if (target.z >= position.z && glm::normalize(axis).x != 0.f)
+    {
+        axis.x = -axis.x;
+    }
     glm::quat deltaRotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
 
-    orientation = orientation * deltaRotation;
+    glm::quat rotation = deltaRotation;
+    rotation = glm::normalize(rotation);
 
-    orientation = glm::normalize(orientation);
+    glm::vec3 newDirection = glm::vec3(rotation * glm::vec4(direction, 0.0f));
+    target = position + newDirection;
     dirty = true;
 }
 
@@ -115,12 +126,7 @@ glm::mat4 &Camera::getViewMatrix()
 
 void Camera::updateMatrices()
 {
-    glm::quat inverseRotation = glm::conjugate(orientation);
 
-    glm::mat4 viewRotation = glm::mat4_cast(inverseRotation);
-
-    glm::mat4 viewTranslation = glm::translate(glm::mat4(1.0f), -position);
-
-    viewMatrix = viewRotation * viewTranslation;
+    viewMatrix = glm::lookAt(position, target, up);
     projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
 }

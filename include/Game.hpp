@@ -36,5 +36,5 @@ private:
   glm::vec2 lastMousePos{0.f, 0.f};
   glm::vec2 angle{0.f, 0.f};
 
-  float sensitivity{3.f};
+  float sensitivity{5.f};
 };
