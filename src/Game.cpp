@@ -57,8 +57,8 @@ void Game::run()
   // model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
   // model.scale(glm::vec3{0.01f, 0.01f, 0.01f});
 
-  Square s{10.f, glm::vec3{1.0f, 0.8f, 0.5f}};
-  s.setPosition(glm::vec3{0.f, -10.f, 0.f});
+  Square s{500.f, glm::vec3{1.0f, 0.8f, 0.5f}};
+  s.setPosition(glm::vec3{0.f, 0.f, 0.f});
 
   Model model2{
       "./assets/models/Skull/12140_Skull_v3_L2.obj",
@@ -79,9 +79,14 @@ void Game::run()
     processInput(deltaTime);
 
     // renderer->render(model, *camera, *shader);
+    shader->setUniform1i("hasTexture", 1);
+    glEnable(GL_DEPTH_TEST);
     renderer->render(model2, *camera, *shader);
 
-    renderer->render(s, *ui, *shader); // TO MAKE IT WORK I NEED THE THE RIGHT HANDLING OF LAYOUTS IN THE SHADER (ADD LAYOUT 1)
+    shader->setUniform1i("hasTexture", 0);
+    glDisable(GL_DEPTH_TEST);
+    renderer->render(s, *ui, *shader);
+
     renderer->clear(window);
   }
 }
@@ -195,6 +200,6 @@ void Game::processInput(float deltaTime)
 
 void Game::loadShaders()
 {
-  shader = new Shader{"./shaders/tex/tex.vert",
-                      "./shaders/tex/tex.frag"};
+  shader = new Shader{"./shaders/mixed_cam/mixed_cam.vert",
+                      "./shaders/mixed_cam/mixed_cam.frag"};
 }
