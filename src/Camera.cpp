@@ -89,10 +89,10 @@ void Camera::rotate(glm::vec3 axis, float angle)
 {
     glm::vec3 direction = target - position;
 
-    std::cout << "x: " << direction.x << " y:" << direction.y << " z: " << direction.z << std::endl;
-    if (target.z >= position.z && glm::normalize(axis).x != 0.f)
+    // avoids flipping of x axis
+    if (glm::normalize(axis).x != 0.f)
     {
-        axis.x = -axis.x;
+        axis = glm::normalize(glm::cross(direction, up));
     }
     glm::quat deltaRotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
 
