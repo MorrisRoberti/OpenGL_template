@@ -1,4 +1,10 @@
 #include "../include/ModelLoader.hpp"
+#include <iostream>
+
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <glm/gtc/type_ptr.hpp>
 
 void ModelLoader::load(const std::string &fileName)
 {

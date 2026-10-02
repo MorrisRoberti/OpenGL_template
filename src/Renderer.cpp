@@ -1,5 +1,8 @@
-#include <iostream>
+#include <GL/glew.h>
+
 #include "../include/Renderer.hpp"
+#include "../include/Shader.hpp"
+#include "../include/Viewable.hpp"
 #include "../include/RenderContext.hpp"
 
 void Renderer::render(Renderable &model, Viewable &viewable, Shader &shader)

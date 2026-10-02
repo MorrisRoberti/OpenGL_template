@@ -1,12 +1,6 @@
 #pragma once
-#include <GL/glew.h>
-#include <sstream>
-#include <fstream>
-#include <vector>
-#include <iostream>
+#include <glm/mat4x4.hpp>
 #include <string>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 class Shader
 {
@@ -23,7 +17,7 @@ public:
     void setUniform1i(const std::string &uniformName, int value);
 
 private:
-    GLuint vertexShaderId;
-    GLuint fragmentShaderId;
-    GLuint programId;
+    unsigned int vertexShaderId;
+    unsigned int fragmentShaderId;
+    unsigned int programId;
 };

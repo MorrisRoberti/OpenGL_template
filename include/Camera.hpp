@@ -1,7 +1,6 @@
 #pragma once
 #include "./Viewable.hpp"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/vec3.hpp>
 
 class Camera : public Viewable
 {

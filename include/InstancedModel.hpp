@@ -1,11 +1,8 @@
 #pragma once
-#include <GL/glew.h>
 #include "./Renderable.hpp"
 #include "./Transformable.hpp"
-#include "./RenderContext.hpp"
 #include "./ModelLoader.hpp"
 
-struct ModelData;
 class InstancedModel : public Renderable
 {
 public:

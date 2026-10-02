@@ -1,8 +1,9 @@
 #pragma once
-#include "../include/Viewable.hpp"
-#include "../include/Shader.hpp"
 #include <GLFW/glfw3.h>
 #include "../include/Renderable.hpp"
+
+class Viewable;
+class Shader;
 
 class Renderer
 {

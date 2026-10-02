@@ -1,10 +1,11 @@
 #pragma once
-#include "../include/Camera.hpp"
-#include "../include/UICamera.hpp"
-#include "../include/Renderer.hpp"
-#include "../include/Shader.hpp"
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/vec2.hpp>
+
+class Shader;
+class Camera;
+class UICamera;
+class Renderer;
 
 class Game
 {
@@ -33,7 +34,7 @@ private:
   Shader *shader;
   Renderer *renderer;
 
-  glm::dvec2 mousePos{0., 0};
+  glm::dvec2 mousePos{0.f, 0};
 
   glm::vec2 lastMousePos{0.f, 0.f};
   glm::vec2 angle{0.f, 0.f};

@@ -1,7 +1,6 @@
 #pragma once
-#include <glm/gtc/type_precision.hpp>
-#include "./Shader.hpp"
-#include "./RenderContext.hpp"
+
+struct RenderContext;
 
 class Renderable
 {

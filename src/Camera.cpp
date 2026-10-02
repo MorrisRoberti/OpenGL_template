@@ -1,5 +1,6 @@
 #include "../include/Camera.hpp"
-#include <iostream>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 Camera::Camera(glm::vec3 pos)
 {

@@ -1,22 +1,21 @@
 #pragma once
 #include <GL/glew.h>
-#include "./Loadable.hpp"
 #include <string>
 #include <vector>
-#include <iostream>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-#include <glm/gtc/type_ptr.hpp>
+
+#include "./Loadable.hpp"
 #include "./Mesh.hpp"
+#include <assimp/material.h>
+
+class aiScene;
+class aiMesh;
+class aiMaterial;
 
 struct ModelData
 {
     std::vector<Mesh> mMeshes;
     std::vector<Texture> mTextures;
     std::string mFileName;
-
-    // define the assignment operator (even better if movable)
 
     void clear()
     {

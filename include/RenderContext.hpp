@@ -1,7 +1,8 @@
 #pragma once
-#include <glm/gtc/type_precision.hpp>
-#include "./Viewable.hpp"
-#include "./Shader.hpp"
+#include <glm/mat4x4.hpp>
+
+class Viewable;
+class Shader;
 
 struct RenderContext
 {

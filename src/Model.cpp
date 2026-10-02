@@ -1,4 +1,5 @@
 #include "../include/Model.hpp"
+#include "../include/RenderContext.hpp"
 
 Model::Model(const std::string &fileName)
 {

@@ -1,11 +1,17 @@
+#include <GL/glew.h>
 #include "../include/Game.hpp"
+
+#include <vector>
+#include <iostream>
+#include <glm/mat4x4.hpp>
+
+#include "../include/Camera.hpp"
+#include "../include/UICamera.hpp"
+#include "../include/Renderer.hpp"
+#include "../include/Shader.hpp"
 #include "../assets/2d_shapes/Square.hpp"
-#include "../assets/models/Cube.hpp"
-#include "../include/InstancedModel.hpp"
 #include "../include/Model.hpp"
 #include "../include/Texture.hpp"
-#include <algorithm>
-#include <iostream>
 
 Game::Game()
 {

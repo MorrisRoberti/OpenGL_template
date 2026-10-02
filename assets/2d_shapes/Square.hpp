@@ -1,8 +1,12 @@
 #pragma once
-#include <GL/glew.h>
-#include <glm/gtc/type_ptr.hpp>
-#include <iostream>
 #include "../../include/Shape.hpp"
+#include "../../include/Vertex.hpp"
+#include "../../include/Texture.hpp"
+#include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
 class Square : public Shape
 {
