@@ -2,6 +2,7 @@
 #include <vector>
 #include "./Renderable.hpp"
 #include "./Transformable.hpp"
+#include "./Vertex.hpp"
 
 class Texture;
 struct RenderContext;
