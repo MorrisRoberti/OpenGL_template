@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "./Renderable.hpp"
+#include "./ModelData.hpp"
 #include "./Transformable.hpp"
 #include "./ModelLoader.hpp"
 

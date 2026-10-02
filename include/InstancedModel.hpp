@@ -2,8 +2,9 @@
 #include "./Renderable.hpp"
 #include "./Transformable.hpp"
 #include "./ModelLoader.hpp"
+#include "./ModelData.hpp"
 
-class InstancedModel : public Renderable
+class InstancedModel : public Transformable, public Renderable
 {
 public:
     InstancedModel(const std::string &fileName, const std::vector<glm::mat4> &&modelMatrices);
