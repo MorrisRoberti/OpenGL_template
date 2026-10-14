@@ -26,6 +26,8 @@ SRC_DIR = ./src
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 
 # building the object files
+# $(patsubst pattern, substitution, text) 
+# Finds words in text that match pattern and replaces them with replacement.
 OBJS = $(BUILD_DIR)/main.o $(patsubst $(SRC_DIR)/%, $(BUILD_DIR)/src/%, $(SRCS:.cpp=.o))
 
 # linking the built object files from BUILD_DIR
@@ -34,7 +36,7 @@ $(TARGET): $(OBJS)
 	$(CXX) $(OBJS) -o $(TARGET) $(LIBS)
 
 # compiling main in BUILD_DIR
-$(BUILD_DIR)/main.o: ./main.cpp
+$(BUILD_DIR)/main.o: $(ENTRYPOINT)
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
