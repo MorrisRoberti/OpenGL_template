@@ -3,6 +3,9 @@
 #include "./Transformable.hpp"
 #include "./ModelLoader.hpp"
 #include "./ModelData.hpp"
+#include <vector>
+#include <string>
+#include <glm/mat4x4.hpp>
 
 class InstancedModel : public Transformable, public Renderable
 {

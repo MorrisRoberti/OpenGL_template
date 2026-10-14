@@ -1,5 +1,4 @@
 #pragma once
-#include <GL/glew.h>
 #include <vector>
 #include <glm/mat4x4.hpp>
 #include "./Renderable.hpp"
@@ -14,7 +13,7 @@ class Mesh : public Transformable, public Renderable
 public:
   Mesh() = default;
 
-  Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices,
+  Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
        const std::vector<Texture> &textures);
 
   void render(const RenderContext &context) override;
@@ -23,13 +22,13 @@ public:
 
   void setInsancedAttribs();
 
-  const GLuint getVao() const;
+  const unsigned int getVao() const;
 
-  GLuint vao;
-  GLuint vbo;
-  GLuint ebo;
+  unsigned int vao;
+  unsigned int vbo;
+  unsigned int ebo;
   std::vector<Vertex> mVertices;
-  std::vector<GLuint> mIndices;
+  std::vector<unsigned int> mIndices;
   std::vector<Texture> mTextures;
 
 private:

@@ -1,7 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include "../include/Renderable.hpp"
 
+class Renderable;
 class Viewable;
 class Shader;
 

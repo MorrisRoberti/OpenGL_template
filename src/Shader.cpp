@@ -11,8 +11,8 @@
 Shader::Shader(std::string vertexFilePath, std::string fragmentFilePath)
 {
     // Create the shaders
-    GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-    GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+    unsigned int VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+    unsigned int FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
     // Read the Vertex Shader code from the file
     std::string VertexShaderCode;
@@ -78,7 +78,7 @@ Shader::Shader(std::string vertexFilePath, std::string fragmentFilePath)
 
     // Link the program
     // printf("Linking program\n");
-    GLuint ProgramID = glCreateProgram();
+    unsigned int ProgramID = glCreateProgram();
     glAttachShader(ProgramID, VertexShaderID);
     glAttachShader(ProgramID, FragmentShaderID);
     glLinkProgram(ProgramID);

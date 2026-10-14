@@ -1,9 +1,7 @@
 #include "../include/Mesh.hpp"
-#include "../include/Shader.hpp"
-#include "../include/Viewable.hpp"
 #include "../include/RenderContext.hpp"
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices,
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
            const std::vector<Texture> &textures)
 {
     mVertices = vertices;
@@ -75,7 +73,7 @@ void Mesh::setInsancedAttribs()
     glBindVertexArray(0);
 }
 
-const GLuint Mesh::getVao() const { return vao; }
+const unsigned int Mesh::getVao() const { return vao; }
 
 void Mesh::init()
 {

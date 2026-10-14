@@ -20,5 +20,5 @@ public:
 private:
     GLenum mTextureTarget;
     std::string mFileName;
-    GLuint mTextureObject;
+    unsigned int mTextureObject;
 };

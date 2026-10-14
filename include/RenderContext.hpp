@@ -1,8 +1,7 @@
 #pragma once
 #include <glm/mat4x4.hpp>
-
-class Viewable;
-class Shader;
+#include "./Viewable.hpp"
+#include "./Shader.hpp"
 
 struct RenderContext
 {

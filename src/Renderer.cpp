@@ -1,4 +1,5 @@
 #include <GL/glew.h>
+#include "../include/Renderable.hpp"
 
 #include "../include/Renderer.hpp"
 #include "../include/Shader.hpp"

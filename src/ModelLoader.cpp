@@ -77,7 +77,7 @@ Mesh ModelLoader::initMesh(int index, const aiMesh *mesh, const aiScene *scene)
     std::vector<Vertex> vertices;
     vertices.reserve(mesh->mNumVertices);
 
-    std::vector<GLuint> indices;
+    std::vector<unsigned int> indices;
     indices.reserve(mesh->mNumFaces * 3);
 
     std::vector<Texture> textures;

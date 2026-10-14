@@ -10,17 +10,17 @@
 #include "../include/Viewable.hpp"
 #include "../include/RenderContext.hpp"
 
-GLuint Shape::getVBO() const
+unsigned int Shape::getVBO() const
 {
     return vbo;
 }
 
-GLuint Shape::getVAO() const
+unsigned int Shape::getVAO() const
 {
     return vao;
 }
 
-GLuint Shape::getEBO() const
+unsigned int Shape::getEBO() const
 {
     return ebo;
 }

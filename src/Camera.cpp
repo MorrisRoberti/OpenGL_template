@@ -11,6 +11,7 @@ Camera::Camera(glm::vec3 pos)
     setAspectRatio(aspRatio);
     setNearPlane(1.f);
     setFarPlane(100.f);
+    setFarPlane(100.f);
 
     updateMatrices();
 }

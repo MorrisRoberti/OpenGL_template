@@ -10,11 +10,11 @@ struct RenderContext;
 class Shape : public Transformable, public Renderable
 {
 public:
-    GLuint getVBO() const;
+    unsigned int getVBO() const;
 
-    GLuint getVAO() const;
+    unsigned int getVAO() const;
 
-    GLuint getEBO() const;
+    unsigned int getEBO() const;
 
     int getIndexCount() const;
 

@@ -1,26 +1,47 @@
-# executable name
-TARGET = app
-
-# sources
-MAIN = ./main.cpp
-SRCS = ./src/*.cpp
-
-# headers
-INCLUDE = ./include/*.hpp
+# compiling target
+TARGET = ./bin/app
 
 # compiler
 CXX = g++
 
-# compilation flags
-CXXFLAGS = -Wall -std=c++17
+# header files folder
+INCLUDE = ./include
 
-# libraries
+# compilation flags
+CXXFLAGS = -Wall -std=c++17 -I$(INCLUDE)
+
+# external libs
 LIBS = -lglfw -lGLEW -lGL -lassimp
 
+# folder where to put the object files
+BUILD_DIR = .build
 
-$(TARGET): $(SRCS)
-	$(CXX) $(CXXFLAGS) -o ./bin/$(TARGET) $(MAIN) $(SRCS) -I$(INCLUDE) $(LIBS)
+# entrypoint
+MAIN = ./main.cpp
 
-# cleaning
+# source folder
+SRC_DIR = ./src
+
+# source files
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+
+# building the object files
+OBJS = $(BUILD_DIR)/main.o $(patsubst $(SRC_DIR)/%, $(BUILD_DIR)/src/%, $(SRCS:.cpp=.o))
+
+# linking the built object files from BUILD_DIR
+$(TARGET): $(OBJS)
+	@mkdir -p ./bin
+	$(CXX) $(OBJS) -o $(TARGET) $(LIBS)
+
+# compiling main in BUILD_DIR
+$(BUILD_DIR)/main.o: ./main.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# compiling source files in BUILD_DIR
+$(BUILD_DIR)/src/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 clean:
-	rm -f $(TARGET)
+	rm -rf $(BUILD_DIR) $(TARGET)
