@@ -1,4 +1,4 @@
-#include "../include/UICamera.hpp"
+#include "UICamera.hpp"
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/mat4x4.hpp>

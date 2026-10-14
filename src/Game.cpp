@@ -1,13 +1,13 @@
 #include <GL/glew.h>
-#include "../include/Game.hpp"
+#include "Game.hpp"
 
 #include "../assets/2d_shapes/Square.hpp"
-#include "../include/Camera.hpp"
-#include "../include/Model.hpp"
-#include "../include/Renderer.hpp"
-#include "../include/Shader.hpp"
-#include "../include/Texture.hpp"
-#include "../include/UICamera.hpp"
+#include "Camera.hpp"
+#include "Model.hpp"
+#include "Renderer.hpp"
+#include "Shader.hpp"
+#include "Texture.hpp"
+#include "UICamera.hpp"
 
 #include <GLFW/glfw3.h>
 #include <glm/mat4x4.hpp>

@@ -1,6 +1,6 @@
-#include "../include/Model.hpp"
+#include "Model.hpp"
 
-#include "../include/RenderContext.hpp"
+#include "RenderContext.hpp"
 
 #include <string>
 

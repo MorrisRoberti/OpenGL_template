@@ -1,8 +1,8 @@
 #pragma once
-#include "./Renderable.hpp"
-#include "./Texture.hpp"
-#include "./Transformable.hpp"
-#include "./Vertex.hpp"
+#include "Renderable.hpp"
+#include "Texture.hpp"
+#include "Transformable.hpp"
+#include "Vertex.hpp"
 
 #include <vector>
 

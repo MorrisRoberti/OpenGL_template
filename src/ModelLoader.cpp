@@ -1,7 +1,7 @@
-#include "../include/ModelLoader.hpp"
+#include "ModelLoader.hpp"
 
-#include "../include/Texture.hpp"
-#include "../include/Vertex.hpp"
+#include "Texture.hpp"
+#include "Vertex.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/material.h>

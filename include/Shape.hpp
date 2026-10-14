@@ -1,7 +1,7 @@
 #pragma once
-#include "./Renderable.hpp"
-#include "./Transformable.hpp"
-#include "./Vertex.hpp"
+#include "Renderable.hpp"
+#include "Transformable.hpp"
+#include "Vertex.hpp"
 
 #include <vector>
 

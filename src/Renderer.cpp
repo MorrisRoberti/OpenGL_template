@@ -1,11 +1,11 @@
 #include <GL/glew.h>
 
-#include "../include/Renderable.hpp"
+#include "Renderable.hpp"
 
-#include "../include/RenderContext.hpp"
-#include "../include/Renderer.hpp"
-#include "../include/Shader.hpp"
-#include "../include/Viewable.hpp"
+#include "RenderContext.hpp"
+#include "Renderer.hpp"
+#include "Shader.hpp"
+#include "Viewable.hpp"
 
 #include <GLFW/glfw3.h>
 

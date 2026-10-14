@@ -1,9 +1,9 @@
 #pragma once
 
-#include "./ModelData.hpp"
-#include "./ModelLoader.hpp"
-#include "./Renderable.hpp"
-#include "./Transformable.hpp"
+#include "ModelData.hpp"
+#include "ModelLoader.hpp"
+#include "Renderable.hpp"
+#include "Transformable.hpp"
 
 #include <string>
 #include <vector>

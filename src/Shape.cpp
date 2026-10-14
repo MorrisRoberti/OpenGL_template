@@ -1,10 +1,10 @@
-#include "../include/Shape.hpp"
+#include "Shape.hpp"
 
-#include "../include/RenderContext.hpp"
-#include "../include/Shader.hpp"
-#include "../include/Texture.hpp"
-#include "../include/Vertex.hpp"
-#include "../include/Viewable.hpp"
+#include "RenderContext.hpp"
+#include "Shader.hpp"
+#include "Texture.hpp"
+#include "Vertex.hpp"
+#include "Viewable.hpp"
 
 #include <GL/glew.h>
 #include <glm/mat4x4.hpp>

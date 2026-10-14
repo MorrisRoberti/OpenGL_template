@@ -1,5 +1,5 @@
 #pragma once
-#include "./RenderContext.hpp"
+#include "RenderContext.hpp"
 
 class Renderable
 {

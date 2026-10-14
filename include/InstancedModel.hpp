@@ -1,8 +1,8 @@
 #pragma once
-#include "./ModelData.hpp"
-#include "./ModelLoader.hpp"
-#include "./Renderable.hpp"
-#include "./Transformable.hpp"
+#include "ModelData.hpp"
+#include "ModelLoader.hpp"
+#include "Renderable.hpp"
+#include "Transformable.hpp"
 
 #include <glm/mat4x4.hpp>
 

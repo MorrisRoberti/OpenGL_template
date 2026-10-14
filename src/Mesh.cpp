@@ -1,8 +1,8 @@
-#include "../include/Mesh.hpp"
+#include "Mesh.hpp"
 
-#include "../include/RenderContext.hpp"
-#include "../include/Texture.hpp"
-#include "../include/Vertex.hpp"
+#include "RenderContext.hpp"
+#include "Texture.hpp"
+#include "Vertex.hpp"
 
 #include <GL/glew.h>
 #include <glm/mat4x4.hpp>

@@ -1,6 +1,6 @@
 #pragma once
-#include "./Shader.hpp"
-#include "./Viewable.hpp"
+#include "Shader.hpp"
+#include "Viewable.hpp"
 
 #include <glm/mat4x4.hpp>
 

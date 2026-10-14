@@ -1,8 +1,8 @@
 #pragma once
-#include "./Loadable.hpp"
-#include "./Mesh.hpp"
-#include "./ModelData.hpp"
-#include "./Texture.hpp"
+#include "Loadable.hpp"
+#include "Mesh.hpp"
+#include "ModelData.hpp"
+#include "Texture.hpp"
 
 #include <assimp/material.h>
 

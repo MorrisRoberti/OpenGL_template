@@ -1,6 +1,6 @@
-#include "../include/InstancedModel.hpp"
+#include "InstancedModel.hpp"
 
-#include "../include/RenderContext.hpp"
+#include "RenderContext.hpp"
 
 #include <GL/glew.h>
 #include <glm/mat4x4.hpp>
