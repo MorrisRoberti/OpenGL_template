@@ -1,7 +1,11 @@
 #include "../include/Texture.hpp"
-#include <iostream>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "../include/stb_image.h"
+
+#include <GL/glew.h>
+
+#include <iostream>
 
 bool Texture::load()
 {
@@ -40,7 +44,7 @@ bool Texture::load()
     return true;
 }
 
-void Texture::bind(GLenum textureUnit)
+void Texture::bind(unsigned int textureUnit)
 {
     glActiveTexture(textureUnit);
     glBindTexture(mTextureTarget, mTextureObject);

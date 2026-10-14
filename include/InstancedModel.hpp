@@ -1,11 +1,13 @@
 #pragma once
+#include "./ModelData.hpp"
+#include "./ModelLoader.hpp"
 #include "./Renderable.hpp"
 #include "./Transformable.hpp"
-#include "./ModelLoader.hpp"
-#include "./ModelData.hpp"
-#include <vector>
-#include <string>
+
 #include <glm/mat4x4.hpp>
+
+#include <string>
+#include <vector>
 
 class InstancedModel : public Transformable, public Renderable
 {

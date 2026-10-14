@@ -1,7 +1,8 @@
 #pragma once
 #include "./Viewable.hpp"
-#include <glm/vec3.hpp>
+
 #include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 
 class Camera : public Viewable
 {

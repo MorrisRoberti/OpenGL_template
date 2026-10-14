@@ -1,5 +1,4 @@
 #pragma once
-#include <GL/glew.h>
 #include <string>
 
 class Texture
@@ -8,17 +7,17 @@ class Texture
 public:
     Texture() = default;
 
-    Texture(GLenum textureTarget, const std::string &fileName) : mTextureTarget(textureTarget), mFileName(fileName)
+    Texture(unsigned int textureTarget, const std::string &fileName) : mTextureTarget(textureTarget), mFileName(fileName)
     {
         load();
     }
 
     bool load();
 
-    void bind(GLenum textureUnit);
+    void bind(unsigned int textureUnit);
 
 private:
-    GLenum mTextureTarget;
+    unsigned int mTextureTarget;
     std::string mFileName;
     unsigned int mTextureObject;
 };

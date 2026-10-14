@@ -1,10 +1,21 @@
 #include "../include/ModelLoader.hpp"
-#include <iostream>
+
+#include "../include/Texture.hpp"
+#include "../include/Vertex.hpp"
 
 #include <assimp/Importer.hpp>
+#include <assimp/material.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <GL/gl.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
+#include <iostream>
+#include <optional>
+#include <string>
+#include <vector>
 
 void ModelLoader::load(const std::string &fileName)
 {

@@ -1,11 +1,12 @@
 #pragma once
+
+#include "./ModelData.hpp"
+#include "./ModelLoader.hpp"
+#include "./Renderable.hpp"
+#include "./Transformable.hpp"
+
 #include <string>
 #include <vector>
-
-#include "./Renderable.hpp"
-#include "./ModelData.hpp"
-#include "./Transformable.hpp"
-#include "./ModelLoader.hpp"
 
 class Model : public Transformable, public Renderable
 {

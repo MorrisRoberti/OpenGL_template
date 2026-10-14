@@ -1,19 +1,21 @@
 #include <GL/glew.h>
 #include "../include/Game.hpp"
 
-#include <vector>
-#include <iostream>
+#include "../assets/2d_shapes/Square.hpp"
+#include "../include/Camera.hpp"
+#include "../include/Model.hpp"
+#include "../include/Renderer.hpp"
+#include "../include/Shader.hpp"
+#include "../include/Texture.hpp"
+#include "../include/UICamera.hpp"
+
+#include <GLFW/glfw3.h>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../include/Camera.hpp"
-#include "../include/UICamera.hpp"
-#include "../include/Renderer.hpp"
-#include "../include/Shader.hpp"
-#include "../assets/2d_shapes/Square.hpp"
-#include "../include/Model.hpp"
-#include "../include/Texture.hpp"
+#include <iostream>
+#include <vector>
 
 Game::Game()
 {

@@ -1,10 +1,13 @@
 #include <GL/glew.h>
+
 #include "../include/Renderable.hpp"
 
+#include "../include/RenderContext.hpp"
 #include "../include/Renderer.hpp"
 #include "../include/Shader.hpp"
 #include "../include/Viewable.hpp"
-#include "../include/RenderContext.hpp"
+
+#include <GLFW/glfw3.h>
 
 void Renderer::render(Renderable &model, Viewable &viewable, Shader &shader)
 {

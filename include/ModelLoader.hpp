@@ -1,11 +1,13 @@
 #pragma once
-#include <string>
-#include <vector>
-
 #include "./Loadable.hpp"
 #include "./Mesh.hpp"
 #include "./ModelData.hpp"
+#include "./Texture.hpp"
+
 #include <assimp/material.h>
+
+#include <string>
+#include <vector>
 
 class aiScene;
 class aiMesh;

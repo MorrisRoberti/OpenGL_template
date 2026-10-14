@@ -1,11 +1,12 @@
-#include <GL/glew.h>
-
 #include "../include/Shader.hpp"
+
+#include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <sstream>
+
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 Shader::Shader(std::string vertexFilePath, std::string fragmentFilePath)

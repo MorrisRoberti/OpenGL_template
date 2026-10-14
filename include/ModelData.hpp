@@ -1,9 +1,10 @@
 #pragma once
+
+#include "./Mesh.hpp"
+#include "./Texture.hpp"
+
 #include <string>
 #include <vector>
-
-#include "./Texture.hpp"
-#include "./Mesh.hpp"
 
 struct ModelData
 {

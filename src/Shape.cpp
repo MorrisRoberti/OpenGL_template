@@ -1,14 +1,15 @@
-#include <GL/glew.h>
+#include "../include/Shape.hpp"
 
+#include "../include/RenderContext.hpp"
+#include "../include/Shader.hpp"
+#include "../include/Texture.hpp"
+#include "../include/Vertex.hpp"
+#include "../include/Viewable.hpp"
+
+#include <GL/glew.h>
 #include <glm/mat4x4.hpp>
 
 #include <algorithm>
-#include "../include/Vertex.hpp"
-#include "../include/Texture.hpp"
-#include "../include/Shape.hpp"
-#include "../include/Shader.hpp"
-#include "../include/Viewable.hpp"
-#include "../include/RenderContext.hpp"
 
 unsigned int Shape::getVBO() const
 {

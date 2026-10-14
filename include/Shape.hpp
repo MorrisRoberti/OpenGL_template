@@ -1,8 +1,9 @@
 #pragma once
-#include <vector>
 #include "./Renderable.hpp"
 #include "./Transformable.hpp"
 #include "./Vertex.hpp"
+
+#include <vector>
 
 class Texture;
 struct RenderContext;

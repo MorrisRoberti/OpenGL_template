@@ -36,7 +36,7 @@ $(TARGET): $(OBJS)
 	$(CXX) $(OBJS) -o $(TARGET) $(LIBS)
 
 # compiling main in BUILD_DIR
-$(BUILD_DIR)/main.o: $(ENTRYPOINT)
+$(BUILD_DIR)/main.o: $(MAIN)
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 

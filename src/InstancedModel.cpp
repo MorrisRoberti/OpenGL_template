@@ -1,5 +1,13 @@
 #include "../include/InstancedModel.hpp"
 
+#include "../include/RenderContext.hpp"
+
+#include <GL/glew.h>
+#include <glm/mat4x4.hpp>
+
+#include <string>
+#include <vector>
+
 InstancedModel::InstancedModel(const std::string &fileName,
                                const std::vector<glm::mat4> &&modelMatrices)
 {

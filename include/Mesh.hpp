@@ -1,10 +1,10 @@
 #pragma once
-#include <vector>
-#include <glm/mat4x4.hpp>
 #include "./Renderable.hpp"
-#include "./Transformable.hpp"
 #include "./Texture.hpp"
+#include "./Transformable.hpp"
 #include "./Vertex.hpp"
+
+#include <vector>
 
 class RenderContext;
 

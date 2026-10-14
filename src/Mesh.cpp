@@ -1,5 +1,14 @@
 #include "../include/Mesh.hpp"
+
 #include "../include/RenderContext.hpp"
+#include "../include/Texture.hpp"
+#include "../include/Vertex.hpp"
+
+#include <GL/glew.h>
+#include <glm/mat4x4.hpp>
+#include <glm/vec4.hpp>
+
+#include <vector>
 
 Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
            const std::vector<Texture> &textures)
