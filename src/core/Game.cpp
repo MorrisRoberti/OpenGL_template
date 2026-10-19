@@ -1,12 +1,12 @@
 #include <GL/glew.h>
 #include "Game.hpp"
 
-#include "../assets/2d_shapes/Square.hpp"
+#include "../../assets/shapes/Square.hpp"
 #include "Camera.hpp"
-#include "Model.hpp"
-#include "Renderer.hpp"
-#include "Shader.hpp"
-#include "Texture.hpp"
+#include "graphics/Model.hpp"
+#include "graphics/Renderer.hpp"
+#include "graphics/Shader.hpp"
+#include "graphics/Texture.hpp"
 #include "UICamera.hpp"
 
 #include <GLFW/glfw3.h>
@@ -67,6 +67,7 @@ void Game::run()
   // model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
   // model.scale(glm::vec3{0.01f, 0.01f, 0.01f});
 
+  std::cout << "d";
   Square s{500.f, glm::vec3{1.0f, 0.8f, 0.5f}};
   s.setPosition(glm::vec3{0.f, 0.f, 0.f});
 
@@ -210,6 +211,6 @@ void Game::processInput(float deltaTime)
 
 void Game::loadShaders()
 {
-  shader = new Shader{"./shaders/mixed_cam/mixed_cam.vert",
-                      "./shaders/mixed_cam/mixed_cam.frag"};
+  shader = new Shader{"./assets/shaders/mixed_cam/mixed_cam.vert",
+                      "./assets/shaders/mixed_cam/mixed_cam.frag"};
 }

@@ -1,49 +1,42 @@
-# compiling target
+# Nome dell'eseguibile finale
 TARGET = ./bin/app
 
-# compiler
+# Compilatore
 CXX = g++
 
-# header files folder
-INCLUDE = ./include
+# Flags di compilazione (C++17 e avvertimenti abilitati)
+CXXFLAGS = -Wall -std=c++17
 
-# compilation flags
-CXXFLAGS = -Wall -std=c++17 -I$(INCLUDE)
+# Cartelle degli header: include sia 'include' che 'src' e le sue sotto-cartelle
+INCLUDE_FLAGS = -I./include \
+                -I./src \
+                -I./src/core \
+                -I./src/graphics
 
-# external libs
+# Librerie esterne da linkare
 LIBS = -lglfw -lGLEW -lGL -lassimp
 
-# folder where to put the object files
+# Cartella per i file oggetto temporanei
 BUILD_DIR = .build
 
-# entrypoint
-MAIN = ./main.cpp
+# Trova AUTOMATICAMENTE tutti i file .cpp dentro 'src' e in QUALSIASI sua sotto-cartella (incluso main.cpp)
+SRCS = $(shell find ./src -name "*.cpp")
 
-# source folder
-SRC_DIR = ./src
+# Genera la lista dei file .o speculare alla struttura dei file .cpp
+OBJS = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 
-# source files
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-
-# building the object files
-# $(patsubst pattern, substitution, text) 
-# Finds words in text that match pattern and replaces them with replacement.
-OBJS = $(BUILD_DIR)/main.o $(patsubst $(SRC_DIR)/%, $(BUILD_DIR)/src/%, $(SRCS:.cpp=.o))
-
-# linking the built object files from BUILD_DIR
+# Regola principale: Linker dell'eseguibile
 $(TARGET): $(OBJS)
 	@mkdir -p ./bin
 	$(CXX) $(OBJS) -o $(TARGET) $(LIBS)
 
-# compiling main in BUILD_DIR
-$(BUILD_DIR)/main.o: $(MAIN)
+# Regola generica per compilare QUALSIASI file .cpp mantenendo la struttura delle cartelle
+$(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -c $< -o $@
 
-# compiling source files in BUILD_DIR
-$(BUILD_DIR)/src/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
+# Pulizia dei file generati
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+	rm -rf $(BUILD_DIR) ./bin
+
+.PHONY: clean

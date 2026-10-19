@@ -1,7 +1,7 @@
 #pragma once
-#include "../../include/Shape.hpp"
-#include "../../include/Vertex.hpp"
-#include "../../include/Texture.hpp"
+#include "graphics/Shape.hpp"
+#include "graphics/Vertex.hpp"
+#include "graphics/Texture.hpp"
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 #include <iostream>
