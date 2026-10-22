@@ -20,7 +20,7 @@
 void ModelLoader::load(const std::string &fileName)
 {
 
-    modelData.mFileName = fileName;
+    mModelData.mFileName = fileName;
 
     Assimp::Importer importer;
 
@@ -30,7 +30,7 @@ void ModelLoader::load(const std::string &fileName)
     {
 
         initFromScene(pScene);
-        modelData.mFileName.clear();
+        mModelData.mFileName.clear();
     }
     else
         std::cerr << "Error while parsing the model at: " << fileName << std::endl;
@@ -38,19 +38,19 @@ void ModelLoader::load(const std::string &fileName)
 
 const ModelData ModelLoader::getModelData() const
 {
-    return modelData;
+    return mModelData;
 }
 
 void ModelLoader::initFromScene(const aiScene *scene)
 {
-    modelData.mMeshes.resize(scene->mNumMeshes);
-    modelData.mTextures.resize(scene->mNumMaterials);
+    mModelData.mMeshes.resize(scene->mNumMeshes);
+    mModelData.mTextures.resize(scene->mNumMaterials);
 
     for (size_t i = 0; i < scene->mNumMeshes; ++i)
     {
         const aiMesh *mesh = scene->mMeshes[i];
         auto createdMesh = initMesh(i, mesh, scene);
-        modelData.mMeshes.push_back(createdMesh);
+        mModelData.mMeshes.push_back(createdMesh);
     }
 }
 
@@ -61,10 +61,10 @@ std::vector<Texture> ModelLoader::initMaterials(aiMaterial *mat, aiTextureType t
     std::string dir;
 
     // find the object directory
-    std::size_t lastSlash = modelData.mFileName.find_last_of("/\\");
+    std::size_t lastSlash = mModelData.mFileName.find_last_of("/\\");
     if (lastSlash != std::string::npos)
     {
-        dir = modelData.mFileName.substr(0, lastSlash);
+        dir = mModelData.mFileName.substr(0, lastSlash);
     }
     else
     {

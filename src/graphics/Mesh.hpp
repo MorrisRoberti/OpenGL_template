@@ -22,11 +22,9 @@ public:
 
   void setInsancedAttribs();
 
-  const unsigned int getVao() const;
-
-  unsigned int vao;
-  unsigned int vbo;
-  unsigned int ebo;
+  unsigned int mVao;
+  unsigned int mVbo;
+  unsigned int mEbo;
   std::vector<Vertex> mVertices;
   std::vector<unsigned int> mIndices;
   std::vector<Texture> mTextures;

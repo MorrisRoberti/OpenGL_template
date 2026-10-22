@@ -6,7 +6,7 @@
 
 struct RenderContext
 {
-    const Viewable &camera;
-    Shader &shader;
-    glm::mat4 modelMatrix{1.0f};
+    const Viewable &mCamera;
+    Shader &mShader;
+    glm::mat4 mModelMatrix{1.0f};
 };

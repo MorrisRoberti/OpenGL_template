@@ -22,10 +22,10 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
 void Mesh::render(const RenderContext &context)
 {
 
-    glm::mat4 currentModelMatrix = context.modelMatrix * getModelMatrix();
+    glm::mat4 currentModelMatrix = context.mModelMatrix * getModelMatrix();
 
-    context.shader.setMat4("model", currentModelMatrix);
-    context.shader.setUniform1i("gSampler", 0);
+    context.mShader.setMat4("model", currentModelMatrix);
+    context.mShader.setUniform1i("gSampler", 0);
 
     for (size_t i = 0; i < mTextures.size(); ++i)
     {
@@ -33,14 +33,14 @@ void Mesh::render(const RenderContext &context)
     }
 
     // draw mesh
-    glBindVertexArray(vao);
+    glBindVertexArray(mVao);
     glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
 void Mesh::renderInstanced(int instancesCount) const
 {
-    glBindVertexArray(vao);
+    glBindVertexArray(mVao);
 
     glDrawElementsInstanced(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0,
                             instancesCount);
@@ -55,7 +55,7 @@ void Mesh::setInsancedAttribs()
         mTextures[i].bind(GL_TEXTURE0 + i);
     }
 
-    glBindVertexArray(vao);
+    glBindVertexArray(mVao);
 
     std::size_t vec4Size = sizeof(glm::vec4);
 
@@ -82,24 +82,22 @@ void Mesh::setInsancedAttribs()
     glBindVertexArray(0);
 }
 
-const unsigned int Mesh::getVao() const { return vao; }
-
 void Mesh::init()
 {
 
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
+    glGenVertexArrays(1, &mVao);
+    glGenBuffers(1, &mVbo);
+    glGenBuffers(1, &mEbo);
 
-    glBindVertexArray(vao);
+    glBindVertexArray(mVao);
 
-    // vbo setting
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // mVbo setting
+    glBindBuffer(GL_ARRAY_BUFFER, mVbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * mVertices.size(),
                  &mVertices.at(0), GL_STATIC_DRAW);
 
-    // ebo setting
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    // mEbo setting
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  sizeof(unsigned int) * mIndices.size(), &mIndices.at(0),
                  GL_STATIC_DRAW);

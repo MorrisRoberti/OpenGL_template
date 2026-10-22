@@ -18,7 +18,5 @@ public:
     void setUniform1i(const std::string &uniformName, int value);
 
 private:
-    unsigned int vertexShaderId;
-    unsigned int fragmentShaderId;
-    unsigned int programId;
+    unsigned int mProgramId;
 };

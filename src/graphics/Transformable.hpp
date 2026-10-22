@@ -9,58 +9,58 @@ class Transformable
 public:
     void translate(glm::vec3 translation)
     {
-        position += translation;
-        dirty = true;
+        mPosition += translation;
+        mDirty = true;
     }
 
     void setPosition(glm::vec3 newPos)
     {
-        position = newPos;
-        dirty = true;
+        mPosition = newPos;
+        mDirty = true;
     }
 
     void scale(glm::vec3 scaling)
     {
         mScale += scaling;
-        dirty = true;
+        mDirty = true;
     }
 
     void setScale(glm::vec3 newScale)
     {
         mScale = newScale;
-        dirty = true;
+        mDirty = true;
     }
 
     void rotate(glm::vec3 axis, float angle)
     {
         glm::quat deltaRotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
 
-        rotation = deltaRotation * rotation;
+        mRotation = deltaRotation * mRotation;
 
-        rotation = glm::normalize(rotation);
-        dirty = true;
+        mRotation = glm::normalize(mRotation);
+        mDirty = true;
     }
 
     const glm::mat4 getModelMatrix()
     {
-        if (dirty)
+        if (mDirty)
         {
-            glm::mat4 t = glm::translate(glm::mat4{1.f}, position);
-            glm::mat4 r = glm::mat4_cast(rotation);
+            glm::mat4 t = glm::translate(glm::mat4{1.f}, mPosition);
+            glm::mat4 r = glm::mat4_cast(mRotation);
             glm::mat4 s = glm::scale(glm::mat4{1.f}, mScale);
 
-            cachedModelMatrix = t * r * s;
-            dirty = false;
+            mCachedModelMatrix = t * r * s;
+            mDirty = false;
         }
 
-        return cachedModelMatrix;
+        return mCachedModelMatrix;
     }
 
 private:
-    glm::vec3 position{0.f};
+    glm::vec3 mPosition{0.f};
     glm::vec3 mScale{1.f};
-    glm::quat rotation{1.0f, 0.0f, 0.0f, 0.0f};
-    glm::mat4 cachedModelMatrix{1.0f};
+    glm::quat mRotation{1.0f, 0.0f, 0.0f, 0.0f};
+    glm::mat4 mCachedModelMatrix{1.0f};
 
-    bool dirty{false};
+    bool mDirty{false};
 };

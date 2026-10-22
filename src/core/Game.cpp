@@ -29,9 +29,10 @@ Game::Game()
 Game::~Game()
 {
 
-  delete shader;
-  delete camera;
-  delete renderer;
+  delete mShader;
+  delete mCamera;
+  delete mUi;
+  delete mRenderer;
   glfwTerminate();
 }
 
@@ -79,7 +80,7 @@ void Game::run()
   model2.setPosition(glm::vec3{0.f, 0.f, -50.f});
 
   float lastFrame = 0.0f;
-  while (!glfwWindowShouldClose(window))
+  while (!glfwWindowShouldClose(mWindow))
   {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -89,16 +90,16 @@ void Game::run()
 
     processInput(deltaTime);
 
-    // renderer->render(model, *camera, *shader);
-    shader->setUniform1i("hasTexture", 1);
+    // mRenderer->render(model, *mCamera, *mShader);
+    mShader->setUniform1i("hasTexture", 1);
     glEnable(GL_DEPTH_TEST);
-    renderer->render(model2, *camera, *shader);
+    mRenderer->render(model2, *mCamera, *mShader);
 
-    shader->setUniform1i("hasTexture", 0);
+    mShader->setUniform1i("hasTexture", 0);
     glDisable(GL_DEPTH_TEST);
-    renderer->render(s, *ui, *shader);
+    mRenderer->render(s, *mUi, *mShader);
 
-    renderer->clear(window);
+    mRenderer->clear(mWindow);
   }
 }
 
@@ -117,15 +118,15 @@ void Game::initWindow()
     exit(1);
   }
 
-  window = glfwCreateWindow(600, 600, "New Game", nullptr, nullptr);
+  mWindow = glfwCreateWindow(600, 600, "New Game", nullptr, nullptr);
 
-  if (!window)
+  if (!mWindow)
   {
     std::cerr << "Error while creating the glfwWindow" << std::endl;
     exit(1);
   }
 
-  glfwMakeContextCurrent(window);
+  glfwMakeContextCurrent(mWindow);
 
   if (glewInit() != GLEW_OK)
   {
@@ -136,19 +137,19 @@ void Game::initWindow()
 
 void Game::initCamera()
 {
-  camera = new Camera{glm::vec3{0.f, 0.f, 10.f}};
+  mCamera = new Camera{glm::vec3{0.f, 0.f, 10.f}};
   glm::mat4 transformation =
-      camera->getProjectionMatrix() * camera->getViewMatrix() * glm::mat4(1.0f);
-  shader->setMat4("transformation", transformation);
+      mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * glm::mat4(1.0f);
+  mShader->setMat4("transformation", transformation);
 
-  // ui
-  ui = new UICamera{0.f, 1920.f, 0.f, 1080.f, -1.0f, 1.0f};
+  // mUi
+  mUi = new UICamera{0.f, 1920.f, 0.f, 1080.f, -1.0f, 1.0f};
 }
 
 void Game::setCallbacks()
 {
-  glfwSetFramebufferSizeCallback(window,
-                                 [](GLFWwindow *window, int width, int height)
+  glfwSetFramebufferSizeCallback(mWindow,
+                                 [](GLFWwindow *mWindow, int width, int height)
                                  {
                                    glViewport(0, 0, width, height);
                                  });
@@ -168,49 +169,49 @@ void Game::initSettings()
 void Game::processInput(float deltaTime)
 {
 
-  glfwGetCursorPos(window, &mousePos.x, &mousePos.y);
+  glfwGetCursorPos(mWindow, &mMousePos.x, &mMousePos.y);
 
-  angle.x = (mousePos.x - lastMousePos.x) * sensitivity * deltaTime;
-  angle.y = (mousePos.y - lastMousePos.y) * sensitivity * deltaTime;
+  mAngle.x = (mMousePos.x - mLastMousePos.x) * mSensitivity * deltaTime;
+  mAngle.y = (mMousePos.y - mLastMousePos.y) * mSensitivity * deltaTime;
 
-  if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+  if (glfwGetMouseButton(mWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
   {
 
-    if (mousePos.x != lastMousePos.x)
-      camera->rotate(glm::vec3(0.f, 1.0f, 0.f), angle.x);
+    if (mMousePos.x != mLastMousePos.x)
+      mCamera->rotate(glm::vec3(0.f, 1.0f, 0.f), mAngle.x);
 
-    if (mousePos.y != lastMousePos.y)
-      camera->rotate(glm::vec3(1.f, 0.0f, 0.f), angle.y);
+    if (mMousePos.y != mLastMousePos.y)
+      mCamera->rotate(glm::vec3(1.f, 0.0f, 0.f), mAngle.y);
   }
 
-  lastMousePos.x = mousePos.x;
-  lastMousePos.y = mousePos.y;
+  mLastMousePos.x = mMousePos.x;
+  mLastMousePos.y = mMousePos.y;
 
   float offset = 15.f * deltaTime;
 
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+  if (glfwGetKey(mWindow, GLFW_KEY_W) == GLFW_PRESS)
   {
-    camera->translate(glm::vec3(0.f, 0.f, offset));
+    mCamera->translate(glm::vec3(0.f, 0.f, offset));
   }
 
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+  if (glfwGetKey(mWindow, GLFW_KEY_S) == GLFW_PRESS)
   {
-    camera->translate(glm::vec3(0.f, 0.f, -offset));
+    mCamera->translate(glm::vec3(0.f, 0.f, -offset));
   }
 
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+  if (glfwGetKey(mWindow, GLFW_KEY_D) == GLFW_PRESS)
   {
-    camera->translate(glm::vec3(offset, 0.f, 0.f));
+    mCamera->translate(glm::vec3(offset, 0.f, 0.f));
   }
 
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+  if (glfwGetKey(mWindow, GLFW_KEY_A) == GLFW_PRESS)
   {
-    camera->translate(glm::vec3(-offset, 0.f, 0.f));
+    mCamera->translate(glm::vec3(-offset, 0.f, 0.f));
   }
 }
 
 void Game::loadShaders()
 {
-  shader = new Shader{"./assets/shaders/mixed_cam/mixed_cam.vert",
-                      "./assets/shaders/mixed_cam/mixed_cam.frag"};
+  mShader = new Shader{"./assets/shaders/mixed_cam/mixed_cam.vert",
+                       "./assets/shaders/mixed_cam/mixed_cam.frag"};
 }

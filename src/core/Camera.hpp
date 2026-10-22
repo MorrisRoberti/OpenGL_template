@@ -7,13 +7,13 @@
 class Camera : public Viewable
 {
 public:
-    Camera(glm::vec3 pos);
+    Camera(glm::vec3 position);
 
     void setPosition(glm::vec3 newPosition);
 
-    void setFOV(float fieldOfView);
+    void setFOV(float newFov);
 
-    void setAspectRatio(float ratio);
+    void setAspectRatio(float newAspectRatio);
 
     void setNearPlane(float newNearPlane);
 
@@ -40,16 +40,16 @@ public:
 private:
     void updateMatrices();
 
-    glm::vec3 position{0.f, 0.f, 0.f};
-    glm::vec3 target{0.f, 0.f, 8.f};
-    glm::vec3 up{0.f, 1.f, 0.f};
+    glm::vec3 mPosition{0.f, 0.f, 0.f};
+    glm::vec3 mTarget{0.f, 0.f, 8.f};
+    glm::vec3 mUp{0.f, 1.f, 0.f};
 
-    float fov;
-    float aspectRatio;
-    float nearPlane;
-    float farPlane;
+    float mFov;
+    float mAspectRatio;
+    float mNearPlane;
+    float mFarPlane;
 
-    glm::mat4 viewMatrix;
-    glm::mat4 projectionMatrix;
-    bool dirty{false};
+    glm::mat4 mViewMatrix;
+    glm::mat4 mProjectionMatrix;
+    bool mDirty{false};
 };

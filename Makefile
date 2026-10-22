@@ -1,41 +1,41 @@
-# Nome dell'eseguibile finale
+# Name of the final executable
 TARGET = ./bin/app
 
-# Compilatore
+# Compiler
 CXX = g++
 
-# Flags di compilazione (C++17 e avvertimenti abilitati)
+# Compilation flags (C++17 and warnings enabled)
 CXXFLAGS = -Wall -std=c++17
 
-# Cartelle degli header: include sia 'include' che 'src' e le sue sotto-cartelle
+# Header directories: includes 'include', 'src', and its subdirectories
 INCLUDE_FLAGS = -I./include \
                 -I./src \
                 -I./src/core \
                 -I./src/graphics
 
-# Librerie esterne da linkare
+# External libraries to link
 LIBS = -lglfw -lGLEW -lGL -lassimp
 
-# Cartella per i file oggetto temporanei
+# Directory for temporary object files
 BUILD_DIR = .build
 
-# Trova AUTOMATICAMENTE tutti i file .cpp dentro 'src' e in QUALSIASI sua sotto-cartella (incluso main.cpp)
+# AUTOMATICALLY finds all .cpp files inside 'src' and ANY of its subdirectories (including main.cpp)
 SRCS = $(shell find ./src -name "*.cpp")
 
-# Genera la lista dei file .o speculare alla struttura dei file .cpp
+# Generates the list of .o files mirroring the structure of the .cpp files
 OBJS = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 
-# Regola principale: Linker dell'eseguibile
+# Main rule: Executable linker
 $(TARGET): $(OBJS)
 	@mkdir -p ./bin
 	$(CXX) $(OBJS) -o $(TARGET) $(LIBS)
 
-# Regola generica per compilare QUALSIASI file .cpp mantenendo la struttura delle cartelle
+# Generic rule to compile ANY .cpp file while maintaining the directory structure
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) -c $< -o $@
 
-# Pulizia dei file generati
+# Clean up generated files
 clean:
 	rm -rf $(BUILD_DIR) ./bin
 

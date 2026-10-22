@@ -28,5 +28,5 @@ private:
     std::vector<Texture> initMaterials(aiMaterial *mat, aiTextureType type);
     Mesh initMesh(int index, const aiMesh *mesh, const aiScene *scene);
 
-    ModelData modelData;
+    ModelData mModelData;
 };

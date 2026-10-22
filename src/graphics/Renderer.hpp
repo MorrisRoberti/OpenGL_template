@@ -13,6 +13,4 @@ public:
     void render(Renderable &model, Viewable &viewable, Shader &shader);
 
     void clear(GLFWwindow *window);
-
-private:
 };

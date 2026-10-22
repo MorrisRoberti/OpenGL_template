@@ -6,9 +6,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-Camera::Camera(glm::vec3 pos)
+Camera::Camera(glm::vec3 position)
 {
-    setPosition(pos);
+    setPosition(position);
 
     float aspRatio = 4.0f / 3.0f;
     setFOV(45.f);
@@ -22,62 +22,62 @@ Camera::Camera(glm::vec3 pos)
 
 void Camera::setPosition(glm::vec3 newPosition)
 {
-    position = newPosition;
-    dirty = true;
+    mPosition = newPosition;
+    mDirty = true;
 }
 
-void Camera::setFOV(float fieldOfView)
+void Camera::setFOV(float newFov)
 {
-    fov = fieldOfView;
-    dirty = true;
+    mFov = newFov;
+    mDirty = true;
 }
 
-void Camera::setAspectRatio(float ratio)
+void Camera::setAspectRatio(float newAspectRatio)
 {
-    aspectRatio = ratio;
-    dirty = true;
+    mAspectRatio = newAspectRatio;
+    mDirty = true;
 }
 
 void Camera::setNearPlane(float newNearPlane)
 {
-    nearPlane = newNearPlane;
-    dirty = true;
+    mNearPlane = newNearPlane;
+    mDirty = true;
 }
 
 void Camera::setFarPlane(float newFarPlane)
 {
-    farPlane = newFarPlane;
-    dirty = true;
+    mFarPlane = newFarPlane;
+    mDirty = true;
 }
 
 glm::vec3 Camera::getPosition() const
 {
-    return position;
+    return mPosition;
 }
 
 float Camera::getFOV() const
 {
-    return fov;
+    return mFov;
 }
 
 float Camera::getAspectRatio() const
 {
-    return aspectRatio;
+    return mAspectRatio;
 }
 
 float Camera::getNearPlane() const
 {
-    return nearPlane;
+    return mNearPlane;
 }
 
 float Camera::getFarPlane() const
 {
-    return farPlane;
+    return mFarPlane;
 }
 
 void Camera::translate(glm::vec3 translation)
 {
-    glm::vec3 forward = glm::normalize(glm::vec3{target.x - position.x, 0.0f, target.z - position.z});
+    glm::vec3 forward = glm::normalize(glm::vec3{mTarget.x - mPosition.x, 0.0f, mTarget.z - mPosition.z});
     glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 right = glm::normalize(glm::cross(forward, worldUp));
     glm::vec3 up = glm::normalize(glm::cross(right, forward));
@@ -86,19 +86,19 @@ void Camera::translate(glm::vec3 translation)
                                    up * translation.y +
                                    forward * translation.z);
 
-    position += worldDisplacement;
-    target += worldDisplacement;
-    dirty = true;
+    mPosition += worldDisplacement;
+    mTarget += worldDisplacement;
+    mDirty = true;
 }
 
 void Camera::rotate(glm::vec3 axis, float angle)
 {
-    glm::vec3 direction = target - position;
+    glm::vec3 direction = mTarget - mPosition;
 
     // avoids flipping of x axis
     if (glm::normalize(axis).x != 0.f)
     {
-        axis = glm::normalize(glm::cross(direction, up));
+        axis = glm::normalize(glm::cross(direction, mUp));
     }
     glm::quat deltaRotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
 
@@ -106,33 +106,33 @@ void Camera::rotate(glm::vec3 axis, float angle)
     rotation = glm::normalize(rotation);
 
     glm::vec3 newDirection = glm::vec3(rotation * glm::vec4(direction, 0.0f));
-    target = position + newDirection;
-    dirty = true;
+    mTarget = mPosition + newDirection;
+    mDirty = true;
 }
 
 const glm::mat4 &Camera::getProjectionMatrix()
 {
-    if (dirty)
+    if (mDirty)
     {
         updateMatrices();
-        dirty = false;
+        mDirty = false;
     }
-    return projectionMatrix;
+    return mProjectionMatrix;
 }
 
 const glm::mat4 &Camera::getViewMatrix()
 {
-    if (dirty)
+    if (mDirty)
     {
         updateMatrices();
-        dirty = false;
+        mDirty = false;
     }
-    return viewMatrix;
+    return mViewMatrix;
 }
 
 void Camera::updateMatrices()
 {
 
-    viewMatrix = glm::lookAt(position, target, up);
-    projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+    mViewMatrix = glm::lookAt(mPosition, mTarget, mUp);
+    mProjectionMatrix = glm::perspective(glm::radians(mFov), mAspectRatio, mNearPlane, mFarPlane);
 }

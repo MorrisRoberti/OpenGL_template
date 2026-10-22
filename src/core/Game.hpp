@@ -28,16 +28,16 @@ private:
   void draw();
   void update();
 
-  GLFWwindow *window;
-  Camera *camera;
-  UICamera *ui;
-  Shader *shader;
-  Renderer *renderer;
+  GLFWwindow *mWindow;
+  Camera *mCamera;
+  UICamera *mUi;
+  Shader *mShader;
+  Renderer *mRenderer;
 
-  glm::dvec2 mousePos{0.f, 0};
+  glm::dvec2 mMousePos{0.f, 0};
 
-  glm::vec2 lastMousePos{0.f, 0.f};
-  glm::vec2 angle{0.f, 0.f};
+  glm::vec2 mLastMousePos{0.f, 0.f};
+  glm::vec2 mAngle{0.f, 0.f};
 
-  float sensitivity{5.f};
+  float mSensitivity{5.f};
 };

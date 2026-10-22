@@ -21,7 +21,7 @@ void Model::render(const RenderContext &context)
 
     RenderContext newContext = context;
 
-    newContext.modelMatrix = context.modelMatrix * getModelMatrix();
+    newContext.mModelMatrix = context.mModelMatrix * getModelMatrix();
 
     for (auto &mesh : mModelData.mMeshes)
         mesh.render(newContext);

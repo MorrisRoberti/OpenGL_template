@@ -28,15 +28,15 @@ public:
 protected:
     Shape() = default;
 
-    Shape(int iCount, int vCount);
+    Shape(int indexCount, int vertexCount);
 
     void setBuffers();
 
-    unsigned int vbo;
-    unsigned int vao;
-    unsigned int ebo;
+    unsigned int mVbo;
+    unsigned int mVao;
+    unsigned int mEbo;
 
-    Texture *texture;
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
+    Texture *mTexture;
+    std::vector<Vertex> mVertices;
+    std::vector<unsigned int> mIndices;
 };

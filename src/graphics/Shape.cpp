@@ -13,27 +13,27 @@
 
 unsigned int Shape::getVBO() const
 {
-    return vbo;
+    return mVbo;
 }
 
 unsigned int Shape::getVAO() const
 {
-    return vao;
+    return mVao;
 }
 
 unsigned int Shape::getEBO() const
 {
-    return ebo;
+    return mEbo;
 }
 
 int Shape::getIndexCount() const
 {
-    return indices.size();
+    return mIndices.size();
 }
 
 int Shape::getVertexCount() const
 {
-    return vertices.size();
+    return mVertices.size();
 }
 
 void Shape::render(const RenderContext &context)
@@ -43,44 +43,44 @@ void Shape::render(const RenderContext &context)
     context.shader.setMat4("model", currentModelMatrix);
     context.shader.setUniform1i("gSampler", 0);
 
-    glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(mVao);
+    glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
 Shape::~Shape()
 {
-    if (vbo)
-        glDeleteBuffers(1, &vbo);
-    if (vao)
-        glDeleteBuffers(1, &vao);
-    if (ebo)
-        glDeleteBuffers(1, &ebo);
+    if (mVbo)
+        glDeleteBuffers(1, &mVbo);
+    if (mVao)
+        glDeleteBuffers(1, &mVao);
+    if (mEbo)
+        glDeleteBuffers(1, &mEbo);
 }
 
-Shape::Shape(int iCount, int vCount)
+Shape::Shape(int indexCount, int vertexCount)
 {
-    vertices.reserve(vCount);
-    indices.reserve(iCount);
+    mVertices.reserve(vertexCount);
+    mIndices.reserve(indexCount);
 }
 
 void Shape::setBuffers()
 {
 
     // vao setting
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glGenVertexArrays(1, &mVao);
+    glBindVertexArray(mVao);
 
     // vbo setting
-    if (!vertices.empty())
+    if (!mVertices.empty())
     {
 
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+        glGenBuffers(1, &mVbo);
+        glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+        glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(Vertex), mVertices.data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, mVbo);
         glVertexAttribPointer(
             0,
             3,
@@ -90,7 +90,7 @@ void Shape::setBuffers()
             Vertex::posOffset());
 
         // setting colors
-        if (std::all_of(vertices.begin(), vertices.end(), [](const auto &v)
+        if (std::all_of(mVertices.begin(), mVertices.end(), [](const auto &v)
                         { return v.hasColors(); }))
         {
             glEnableVertexAttribArray(1);
@@ -104,7 +104,7 @@ void Shape::setBuffers()
         }
 
         // set the texture buffer
-        if (std::all_of(vertices.begin(), vertices.end(), [](const Vertex &v)
+        if (std::all_of(mVertices.begin(), mVertices.end(), [](const Vertex &v)
                         { return v.hasTexCoords(); }))
         {
             glEnableVertexAttribArray(2);
@@ -118,11 +118,11 @@ void Shape::setBuffers()
         }
 
         // ebo setting
-        if (!indices.empty())
+        if (!mIndices.empty())
         {
-            glGenBuffers(1, &ebo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+            glGenBuffers(1, &mEbo);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int), mIndices.data(), GL_STATIC_DRAW);
         }
     }
 
