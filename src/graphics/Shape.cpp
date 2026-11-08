@@ -38,10 +38,10 @@ int Shape::getVertexCount() const
 
 void Shape::render(const RenderContext &context)
 {
-    glm::mat4 currentModelMatrix = context.modelMatrix * getModelMatrix();
+    glm::mat4 currentModelMatrix = context.mModelMatrix * getModelMatrix();
 
-    context.shader.setMat4("model", currentModelMatrix);
-    context.shader.setUniform1i("gSampler", 0);
+    context.mShader.setMat4("model", currentModelMatrix);
+    context.mShader.setUniform1i("gSampler", 0);
 
     glBindVertexArray(mVao);
     glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
