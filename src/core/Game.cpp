@@ -7,6 +7,8 @@
 #include "graphics/Renderer.hpp"
 #include "graphics/Shader.hpp"
 #include "graphics/Texture.hpp"
+#include "utilities/Property.hpp"
+#include "utilities/Signal.hpp"
 #include "UICamera.hpp"
 
 #include <GLFW/glfw3.h>
@@ -15,7 +17,46 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
+#include <memory>
 #include <vector>
+
+constexpr double initialHp = 100;
+
+class Player
+{
+public:
+  Player() : mHp(initialHp), mHasShot(Signal<bool>()) {}
+
+  Property<double> &getHp()
+  {
+    return mHp;
+  }
+
+  Signal<bool> &hasShot()
+  {
+    return mHasShot;
+  }
+
+private:
+  Property<double> mHp;
+  Signal<bool> mHasShot;
+};
+
+class UI
+{
+public:
+  UI() = default;
+
+  void playShootingAnimation()
+  {
+    std::cout << "SHOOOOOOOOTING!!" << std::endl;
+  }
+
+  void decreaseHp(double newHp)
+  {
+    std::cout << "AHI, now you have: " << newHp << " HP!" << std::endl;
+  }
+};
 
 Game::Game()
 {
@@ -36,39 +77,20 @@ Game::~Game()
   glfwTerminate();
 }
 
-std::vector<glm::mat4> genMat(int n)
-{
-  std::vector<glm::mat4> modelMatrices(n, glm::mat4{1.0f});
-
-  modelMatrices[0] = glm::rotate(modelMatrices[0], glm::radians(-90.f),
-                                 glm::vec3{1.0f, 0.f, 0.f});
-  modelMatrices[0] = glm::scale(modelMatrices[0], glm::vec3{0.1f, 0.1f, 0.1f});
-
-  for (int i = 1; i < n; ++i)
-  {
-    modelMatrices[i] =
-        glm::translate(modelMatrices[i], glm::vec3{i * 2.0f, 0.f, 0.f});
-    modelMatrices[i] = glm::rotate(modelMatrices[i], glm::radians(-90.f),
-                                   glm::vec3{1.0f, 0.f, 0.f});
-    modelMatrices[i] =
-        glm::scale(modelMatrices[i], glm::vec3{0.1f, 0.1f, 0.1f});
-  }
-
-  return modelMatrices;
-}
-
 void Game::run()
 {
 
-  // auto v = genMat(100);
-  // auto v2 = v;
-  // Model model{
-  //     "./assets/models/Skull/12140_Skull_v3_L2.obj",
-  // };
-  // model.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
-  // model.scale(glm::vec3{0.01f, 0.01f, 0.01f});
+  Player player;
 
-  std::cout << "d";
+  std::weak_ptr<UI> weakUI;
+
+  auto ui = std::make_shared<UI>();
+  weakUI = ui;
+  player.getHp().subscribe([weakUI](double newHp)
+                           {
+            if(auto pt = weakUI.lock())
+            pt->decreaseHp(newHp); });
+
   Square s{500.f, glm::vec3{1.0f, 0.8f, 0.5f}};
   s.setPosition(glm::vec3{0.f, 0.f, 0.f});
 
@@ -78,6 +100,13 @@ void Game::run()
   model2.rotate(glm::vec3{1.0f, 0.f, 0.f}, -90.f);
   model2.scale(glm::vec3{0.01f, 0.01f, 0.01f});
   model2.setPosition(glm::vec3{0.f, 0.f, -50.f});
+
+  glfwSetWindowUserPointer(mWindow, &player);
+  glfwSetMouseButtonCallback(mWindow, [](GLFWwindow *window, int button, int action, int mods)
+                             {
+                                  auto* player = static_cast<Player*>(glfwGetWindowUserPointer(window));
+                                    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+                                    player->getHp().setValue(player->getHp().getValue() - 10.f); });
 
   float lastFrame = 0.0f;
   while (!glfwWindowShouldClose(mWindow))
@@ -176,12 +205,11 @@ void Game::processInput(float deltaTime)
 
   if (glfwGetMouseButton(mWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
   {
+    // if (mMousePos.x != mLastMousePos.x)
+    //   mCamera->rotate(glm::vec3(0.f, 1.0f, 0.f), mAngle.x);
 
-    if (mMousePos.x != mLastMousePos.x)
-      mCamera->rotate(glm::vec3(0.f, 1.0f, 0.f), mAngle.x);
-
-    if (mMousePos.y != mLastMousePos.y)
-      mCamera->rotate(glm::vec3(1.f, 0.0f, 0.f), mAngle.y);
+    // if (mMousePos.y != mLastMousePos.y)
+    //   mCamera->rotate(glm::vec3(1.f, 0.0f, 0.f), mAngle.y);
   }
 
   mLastMousePos.x = mMousePos.x;
